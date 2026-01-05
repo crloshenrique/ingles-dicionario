@@ -1,4 +1,5 @@
 // Elementos
+const menuIdioma = document.getElementById("menu-idioma");
 const palavraBox = document.getElementById("palavra-box");
 const progressoBox = document.getElementById("progresso-box");
 const input = document.getElementById("resposta");
@@ -6,10 +7,14 @@ const mensagemDiv = document.getElementById("mensagem");
 const traducaoBox = document.getElementById("traducao-box");
 const acertosBox = document.getElementById("acertos-box");
 const errosBox = document.getElementById("erros-box");
+const botaoResponder = document.querySelector("button");
 
-// Menu de escolha
-let inglesNoTopo = true; // true = palavra em inglês no topo, false = palavra em português
-let menuSelecionado = false;
+// Variáveis do jogo
+let idiomaSelecionado = null;
+let palavras = [];
+let i = 0;
+let acertos = 0;
+let erros = 0;
 
 // Recorde
 let recorde = 0;
@@ -22,26 +27,24 @@ fetch("recorde.txt")
     recorde = 0;
   });
 
-// Embaralhar palavras
-const palavras = Object.keys(vocabulario).sort(() => Math.random() - 0.5);
+// Função chamada ao escolher idioma
+function escolherLingua(idioma) {
+  idiomaSelecionado = idioma;
 
-let i = 0;
-let acertos = 0;
-let erros = 0;
-const totalPalavras = palavras.length;
+  // Inicializa palavras embaralhadas
+  palavras = Object.keys(vocabulario).sort(() => Math.random() - 0.5);
+  i = 0;
+  acertos = 0;
+  erros = 0;
 
-// Função para iniciar o jogo após escolha
-function iniciarJogo(escolha) {
-  inglesNoTopo = escolha === "ingles";
-  menuSelecionado = true;
-
-  // Ocultar menu
-  document.getElementById("menu-lingua").style.display = "none";
-
-  // Mostrar elementos do jogo
-  document.getElementById("resposta").style.display = "block";
-  document.getElementById("traducao-box").style.display = "flex";
-  document.querySelector("button").style.display = "block";
+  // Esconde menu e mostra elementos do jogo
+  menuIdioma.style.display = "none";
+  palavraBox.style.display = "flex";
+  progressoBox.style.display = "block";
+  input.style.display = "block";
+  botaoResponder.style.display = "block";
+  mensagemDiv.style.display = "block";
+  traducaoBox.style.display = "flex";
   document.getElementById("contador-container").style.display = "flex";
 
   mostrarPalavra();
@@ -49,15 +52,13 @@ function iniciarJogo(escolha) {
 
 // Atualizar progresso
 function atualizarProgresso() {
-  progressoBox.textContent = `Acertos: ${acertos} / ${totalPalavras}`;
+  progressoBox.textContent = `Acertos: ${acertos} / ${palavras.length}`;
   acertosBox.textContent = acertos;
   errosBox.textContent = erros;
 }
 
 // Mostrar palavra atual
 function mostrarPalavra() {
-  if (!menuSelecionado) return; // só mostra após escolha
-
   if (i >= palavras.length) {
     finalizar();
     return;
@@ -66,31 +67,21 @@ function mostrarPalavra() {
   const palavra = palavras[i];
   const dados = vocabulario[palavra];
 
-  let palavraTopo = "";
-  let traducao = "";
+  let palavraExibir = "";
+  let pronuncia = "";
 
-  if (Array.isArray(dados)) {
-    traducao = dados.map(d => d.significado).join(" / ");
-  } else {
-    traducao = dados.significado;
-  }
-
-  if (inglesNoTopo) {
-    const pronuncia = Array.isArray(dados) ? dados[0].pronuncia : dados.pronuncia;
-    const palavraExibir = palavra.charAt(0).toUpperCase() + palavra.slice(1);
+  if (idiomaSelecionado === "ingles") {
+    palavraExibir = palavra.charAt(0).toUpperCase() + palavra.slice(1);
+    pronuncia = Array.isArray(dados) ? dados[0].pronuncia : dados.pronuncia;
     palavraBox.textContent = `${palavraExibir} (${pronuncia})`;
   } else {
-    const palavraExibir = traducao.charAt(0).toUpperCase() + traducao.slice(1);
-    palavraBox.textContent = `${palavraExibir}`;
+    palavraExibir = Array.isArray(dados) ? dados[0].significado : dados.significado;
+    palavraBox.textContent = palavraExibir;
   }
-
-  palavraBox.style.color = "white";
 
   input.value = "";
   input.focus();
   mensagemDiv.textContent = "";
-
-  // Resetar retângulo de tradução
   traducaoBox.textContent = "";
   traducaoBox.style.color = "#333";
 
@@ -99,7 +90,7 @@ function mostrarPalavra() {
 
 // Responder
 function responder() {
-  if (!menuSelecionado || i >= palavras.length) return;
+  if (i >= palavras.length) return;
 
   const palavra = palavras[i];
   const dados = vocabulario[palavra];
@@ -113,42 +104,38 @@ function responder() {
   if (Array.isArray(dados)) {
     significadosArray = dados.map(d => d.significado);
     const significadosLower = significadosArray.map(d => d.toLowerCase());
-    if (inglesNoTopo) {
-      // Resposta em português
+    if (idiomaSelecionado === "ingles") {
       if (significadosLower.includes(resposta)) correto = true;
     } else {
-      // Resposta em inglês
-      const palavrasLower = [palavra.toLowerCase()];
-      if (palavrasLower.includes(resposta)) correto = true;
+      // Português -> responder em inglês
+      const palavrasIngles = dados.map(d => d.palavra.toLowerCase ? d.palavra.toLowerCase() : d.palavra);
+      if (palavrasIngles.includes(resposta)) correto = true;
     }
   } else {
     significadosArray = [dados.significado];
-    if (inglesNoTopo) {
+    if (idiomaSelecionado === "ingles") {
       if (resposta === dados.significado.toLowerCase()) correto = true;
     } else {
-      if (resposta === palavra.toLowerCase()) correto = true;
+      if (resposta === dados.palavra.toLowerCase()) correto = true;
     }
   }
 
-  // Mostrar tradução correta com cor
-  if (inglesNoTopo) {
+  // Mostrar tradução correta
+  if (idiomaSelecionado === "ingles") {
     traducaoBox.textContent = significadosArray.join(" / ");
   } else {
-    traducaoBox.textContent = palavra.charAt(0).toUpperCase() + palavra.slice(1);
+    const palavrasIngles = Array.isArray(dados) ? dados.map(d => d.palavra) : [dados.palavra];
+    traducaoBox.textContent = palavrasIngles.join(" / ");
   }
   traducaoBox.style.color = correto ? "green" : "red";
 
-  // Atualizar acertos e erros
-  if (correto) {
-    acertos++;
-  } else {
-    erros++;
-  }
+  // Atualizar contadores
+  if (correto) acertos++;
+  else erros++;
 
   i++;
   atualizarProgresso();
 
-  // Delay para ver a tradução
   setTimeout(mostrarPalavra, 1400);
 }
 
@@ -171,7 +158,7 @@ function finalizar() {
   }
 }
 
-// Enter no input envia
+// Enter envia
 input.addEventListener("keydown", function(event) {
   if (event.key === "Enter") {
     responder();
