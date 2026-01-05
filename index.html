@@ -22,6 +22,36 @@
       text-align: center;
     }
 
+    /* Menu de escolha de idioma */
+    #menu-idioma {
+      margin-bottom: 20px;
+    }
+
+    #menu-idioma span {
+      display: block;
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .opcao-lingua {
+      display: inline-block;
+      width: 48%;
+      padding: 12px 0;
+      margin: 0 1%;
+      border-radius: 12px;
+      background-color: #4CAF50;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+      transition: background-color 0.3s;
+    }
+
+    .opcao-lingua:hover {
+      background-color: #45a049;
+    }
+
     #palavra-box {
       background-color: #ff7f50;
       color: white;
@@ -81,6 +111,7 @@
       color: #333;
     }
 
+    /* Retângulo da tradução */
     #traducao-box {
       background-color: #fff;
       color: #333;
@@ -97,6 +128,7 @@
       transition: color 0.3s;
     }
 
+    /* Contadores de acertos/erros */
     #contador-container {
       display: flex;
       justify-content: space-between;
@@ -115,36 +147,12 @@
       box-shadow: 0 3px 6px rgba(0,0,0,0.2);
     }
 
-    #acertos-box { background-color: #4CAF50; }
-    #erros-box { background-color: #f44336; }
-
-    /* Menu inicial */
-    #menu-inicial {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      margin-bottom: 20px;
+    #acertos-box {
+      background-color: #4CAF50;
     }
 
-    .menu-btn {
-      width: 48%;
-      padding: 12px;
-      font-size: 16px;
-      margin: 5px 1%;
-      border-radius: 8px;
-      cursor: pointer;
-      border: none;
-      color: white;
-    }
-
-    .btn-ingles { background-color: #2196F3; }
-    .btn-portugues { background-color: #FF9800; }
-
-    .menu-titulo {
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 15px;
+    #erros-box {
+      background-color: #f44336;
     }
 
   </style>
@@ -153,11 +161,11 @@
 
   <div id="container">
 
-    <!-- Menu inicial -->
-    <div id="menu-inicial">
-      <div class="menu-titulo">Responder em:</div>
-      <button class="menu-btn btn-ingles" onclick="escolherLingua('ingles')">Inglês</button>
-      <button class="menu-btn btn-portugues" onclick="escolherLingua('portugues')">Português</button>
+    <!-- Menu de idioma -->
+    <div id="menu-idioma">
+      <span>Responder em:</span>
+      <div class="opcao-lingua" onclick="escolherLingua('ingles')">Inglês</div>
+      <div class="opcao-lingua" onclick="escolherLingua('portugues')">Português</div>
     </div>
 
     <!-- Retângulo da palavra -->
@@ -167,7 +175,13 @@
     <div id="progresso-box" style="display:none;">Acertos: 0 / 0</div>
 
     <!-- Input -->
-    <input id="resposta" type="text" placeholder="Digite a tradução" autocomplete="off" style="display:none;">
+    <input
+      id="resposta"
+      type="text"
+      placeholder="Digite a tradução"
+      autocomplete="off"
+      style="display:none;"
+    >
 
     <!-- Retângulo da tradução correta -->
     <div id="traducao-box" style="display:none;"></div>
@@ -186,9 +200,9 @@
 
   </div>
 
+  <!-- Scripts -->
   <script src="vocabulario.js"></script>
   <script src="script.js"></script>
 
 </body>
 </html>
-
