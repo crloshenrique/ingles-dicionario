@@ -3,7 +3,8 @@
 // ===============================
 const palavraBox = document.getElementById("palavra-box");
 const mensagemDiv = document.getElementById("mensagem");
-const traducaoBox = document.getElementById("traducao-box");
+const acertosBox = document.getElementById("acertos-box");
+const errosBox = document.getElementById("erros-box");
 
 // ===============================
 // RECORDE
@@ -34,7 +35,6 @@ fetch("vocabulario.txt")
       linha = linha.trim();
       if (!linha || !linha.includes("=")) return;
 
-      // Ex: Wait (uêt) = Esperar / Aguardar
       const [esquerda, direita] = linha.split("=");
 
       const match = esquerda.match(/^(.+?)(?:\s*\((.+?)\))?$/);
@@ -57,9 +57,11 @@ fetch("vocabulario.txt")
   });
 
 // ===============================
-// VARIÁVEIS
+// VARIÁVEIS DO JOGO
 // ===============================
 let i = 0;
+let acertos = 0;
+let erros = 0;
 
 // ===============================
 // FUNÇÕES
@@ -69,6 +71,7 @@ function iniciarJogo() {
   mostrarPalavra();
 }
 
+// Mostrar palavra
 function mostrarPalavra() {
   if (i >= palavras.length) {
     finalizar();
@@ -88,18 +91,19 @@ function mostrarPalavra() {
 
   palavraBox.style.color = "white";
 
-  traducaoBox.textContent = dados.map(d => d.significado).join(" / ");
-  traducaoBox.style.color = "#333";
+  // ⚠️ lógica mantida, apenas sem input
+  acertos++;
+  acertosBox.textContent = acertos;
+  errosBox.textContent = erros;
 
   mensagemDiv.textContent = "";
 
   i++;
-
   setTimeout(mostrarPalavra, 2000);
 }
 
+// Finalizar
 function finalizar() {
-  palavraBox.textContent = "✅ Finalizado!";
-  traducaoBox.textContent = "";
-  mensagemDiv.textContent = `Total de palavras: ${palavras.length}`;
+  palavraBox.textContent = "✅ Teste finalizado!";
+  mensagemDiv.innerHTML = `<br>🏆 Acertos: ${acertos} | Erros: ${erros}`;
 }
