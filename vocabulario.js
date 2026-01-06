@@ -1,1 +1,128 @@
+const vocabulario = {
+  Can: { pronuncia: "kén", significado: "Poder" },
+  Tell: { pronuncia: "tél", significado: "Contar" },
+  Go: { pronuncia: "gô", significado: "Ir" },
+  Offer: { pronuncia: "ófer", significado: "Oferecer" },
+  Build: { pronuncia: "bild", significado: "Construir" },
+  Give: { pronuncia: "guive", significado: "Dar" },
+  Say: { pronuncia: "sei", significado: "Dizer" },
+  Know: { pronuncia: "nôo", significado: "Saber" },
+  Want: { pronuncia: "uant", significado: "Querer" },
+  Watch: { pronuncia: "uátch", significado: "Assistir" },
+  Hit: { pronuncia: "ríter", significado: "Bater" },
+
+  Live: [
+    { pronuncia: "laive", significado: "Viver" },
+    { pronuncia: "laive", significado: "Morar" }
+  ],
+
+  Hug: { pronuncia: "râg", significado: "Abraçar" },
+  Hate: { pronuncia: "râiter", significado: "Odiar" },
+  Feel: { pronuncia: "fíel", significado: "Sentir" },
+  Read: { pronuncia: "whíd", significado: "Ler" },
+  Erase: { pronuncia: "arhês", significado: "Apagar" },
+  See: { pronuncia: "si", significado: "Ver" },
+  Do: { pronuncia: "du", significado: "Fazer" },
+  Write: { pronuncia: "rúate", significado: "Escrever" },
+  Understand: { pronuncia: "andesten", significado: "Entender" },
+  Hear: { pronuncia: "ríer", significado: "Ouvir" },
+  Ask: { pronuncia: "asque", significado: "Pedir" },
+  Arrive: { pronuncia: "arhaíve", significado: "Chegar" },
+  Leave: { pronuncia: "líve", significado: "Sair" },
+  Buy: { pronuncia: "bai", significado: "Comprar" },
+  Sell: { pronuncia: "séu", significado: "Vender" },
+  Have: { pronuncia: "héve", significado: "Ter" },
+  Help: { pronuncia: "hélp", significado: "Ajudar" },
+  Think: { pronuncia: "fhínk", significado: "Pensar" },
+  Sleep: { pronuncia: "slíp", significado: "Dormir" },
+  Wake: { pronuncia: "uêque", significado: "Acordar" },
+  Break: { pronuncia: "brâque", significado: "Quebrar" },
+  Wait: { pronuncia: "uêt", significado: "Esperar" },
+  
+  Start: [
+    { pronuncia: "estarte", significado: "Começar" },
+    { pronuncia: "estarte", significado: "Iniciar" }
+    ],
+  
+  Finish: [
+    { pronuncia: "fíniche", significado: "Terminar" },
+    { pronuncia: "fíniche", significado: "Finalizar" }
+    ],
+  Run: { pronuncia: "rhân", significado: "Correr" },
+  Walk: { pronuncia: "uálque", significado: "Andar" },
+  Believe: { pronuncia: "belíve", significado: "Acreditar" },
+  Invite: { pronuncia: "invai", significado: "Convidar" },
+  Travel: { pronuncia: "thrável", significado: "Viajar" },
+  Take: { pronuncia: "tchêque", significado: "Levar" },
+  Bring: { pronuncia: "bhrím", significado: "Trazer" },
+  Sit: { pronuncia: "sít", significado: "Sentar" },
+  Show: { pronuncia: "shôu", significado: "Mostrar" },
+  Teach: { pronuncia: "thít", significado: "Ensinar" },
+  Learn: { pronuncia: "lan", significado: "Aprender" },
+  Change: { pronuncia: "chênge", significado: "Mudar" },
+  Care: { pronuncia: "quero", significado: "Cuidar" },
+  Cut: { pronuncia: "kãt", significado: "Cortar" },
+  Forget: { pronuncia: "fôrgé", significado: "Esquecer" },
+  Remember: { pronuncia: "rhémembêr", significado: "Lembrar" },
+  Cry: { pronuncia: "chrái", significado: "Chorar" },
+  Laugh: { pronuncia: "láf", significado: "Rir" },
+  Explain: { pronuncia: "écsplén", significado: "Explicar" },
+
+  Call: [
+    { pronuncia: "kál", significado: "Ligar" },
+    { pronuncia: "kál", significado: "Chamar" }
+  ],
+
+  Die: { pronuncia: "dái", significado: "Morrer" },
+  Make: { pronuncia: "mêke", significado: "Fazer" },
+  Develop: { pronuncia: "dêvélop", significado: "Desenvolver" },
+  Agree: { pronuncia: "agrí", significado: "Concordar" },
+  Grow: { pronuncia: "grôu", significado: "Crescer" },
+  Decrease: { pronuncia: "dêcrhis", significado: "Diminuir" },
+
+  Get: [
+    { pronuncia: "gét", significado: "Conseguir" },
+    { pronuncia: "gét", significado: "Receber" }
+  ],
+
+  Smile: { pronuncia: "smai-ol", significado: "Sorrir" },
+  Stay: { pronuncia: "estêy", significado: "Ficar" },
+  Spend: { pronuncia: "espende", significado: "Passar" },
+  Divide: { pronuncia: "diváid", significado: "Dividir" },
+  Open: { pronuncia: "ôpen", significado: "Abrir" },
+  Close: { pronuncia: "clôs", significado: "Fechar" },
+  Jump: { pronuncia: "dhíampe", significado: "Pular" },
+  Fall: { pronuncia: "fál", significado: "Cair" },
+  Cook: { pronuncia: "câque", significado: "Cozinhar" },
+  Wash: { pronuncia: "uáche", significado: "Lavar" },
+  Dry: { pronuncia: "drhái", significado: "Secar" },
+  Search: { pronuncia: "sôrche", significado: "Procurar" },
+  Find: { pronuncia: "fáind", significado: "Encontrar" },
+  Protect: { pronuncia: "protéct", significado: "Proteger" },
+  Receive: { pronuncia: "rhêcíve", significado: "Receber" },
+  Send: { pronuncia: "cénde", significado: "Enviar" },
+  Obey: { pronuncia: "ôhbê", significado: "Obedecer" },
+  Swim: { pronuncia: "súén", significado: "Nadar" },
+  Bathe: { pronuncia: "beidhe", significado: "Banhar" },
+  Dream: { pronuncia: "drhúime", significado: "Sonhar" },
+  Shine: { pronuncia: "sháine", significado: "Brilhar" },
+  Come: { pronuncia: "cãm", significado: "Vir" },
+  Appear: { pronuncia: "apíer", significado: "Aparecer" },
+  Try: { pronuncia: "thrái", significado: "Tentar" },
+  Look: { pronuncia: "lôk", significado: "Olhar" },
+  Listen: { pronuncia: "lísn", significado: "Escutar" },
+  Connect: { pronuncia: "conect", significado: "Ligar" },
+  "Turn off": { pronuncia: "thrârn off", significado: "Desligar" },
+  Brush: { pronuncia: "brâsh", significado: "Escovar" },
+  Sing: { pronuncia: "síngue", significado: "Cantar" },
+  Dance: { pronuncia: "dênce", significado: "Dançar" },
+  Back: { pronuncia: "béck", significado: "Voltar" },
+  Pay: { pronuncia: "pêi", significado: "Pagar" },
+  Lose: { pronuncia: "lú-ous", significado: "Perder" },
+  Win: { pronuncia: "uín", significado: "Ganhar" },
+  Study: { pronuncia: "estâre", significado: "Estudar" },
+  Choose: { pronuncia: "tchúuz", significado: "Escolher" }
+};
+
+window.vocabulario = vocabulario;
 
