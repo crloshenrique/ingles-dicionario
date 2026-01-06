@@ -1,6 +1,3 @@
-// ===============================
-// ELEMENTOS
-// ===============================
 const palavraBox = document.getElementById("palavra-box");
 const opcoesContainer = document.getElementById("opcoes-container");
 const acertosBox = document.getElementById("acertos-box");
