@@ -91,11 +91,12 @@ function criarOpcoes(palavraAtual) {
 
   let opcoes = [correta];
 
-  // 4 opções
-  while (opcoes.length < 4) {
+  // 4 opções no total, com limite de tentativas para evitar loop infinito
+  let tentativas = 0;
+  while (opcoes.length < 4 && tentativas < 20) {
+    tentativas++;
     const palavraAleatoria =
       palavras[Math.floor(Math.random() * palavras.length)];
-
     if (palavraAleatoria === palavraAtual) continue;
 
     const traducoes = vocabulario[palavraAleatoria];
@@ -105,6 +106,11 @@ function criarOpcoes(palavraAtual) {
     if (!opcoes.includes(errada)) {
       opcoes.push(errada);
     }
+  }
+
+  // se ainda faltar opções, repetir algumas para completar
+  while (opcoes.length < 4) {
+    opcoes.push(opcoes[0]);
   }
 
   opcoes.sort(() => Math.random() - 0.5);
