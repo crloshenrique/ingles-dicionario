@@ -10,7 +10,7 @@ const acertosBox = document.getElementById("acertos-box");
 const errosBox = document.getElementById("erros-box");
 
 // ===============================
-// RECORDES
+// RECORDE
 // ===============================
 let recorde = 0;
 
@@ -38,14 +38,24 @@ fetch("vocabulario.txt")
       linha = linha.trim();
       if (!linha || !linha.includes("=")) return;
 
-      const [palavra, traducoes] = linha.split("=");
-      const significados = traducoes
-        .split("/")
-        .map(t => t.trim());
+      // Ex: Wait (uêt) = Esperar / Aguardar
+      const [esquerda, direita] = linha.split("=");
 
-      vocabulario[palavra.trim()] = significados.map(s => ({
-        significado: s,
-        pronuncia: ""
+      // Palavra e pronúncia
+      const match = esquerda.match(/^(.+?)(?:\s*\((.+?)\))?$/);
+      if (!match) return;
+
+      const palavra = match[1].trim().toLowerCase();
+      const pronuncia = match[2] ? match[2].trim() : "";
+
+      // Significados
+      const significados = direita
+        .split("/")
+        .map(s => s.trim());
+
+      vocabulario[palavra] = significados.map(sig => ({
+        significado: sig,
+        pronuncia: pronuncia
       }));
     });
 
@@ -83,11 +93,15 @@ function mostrarPalavra() {
 
   const palavra = palavras[i];
   const dados = vocabulario[palavra];
+  const pronuncia = dados[0].pronuncia;
 
   const palavraExibir =
     palavra.charAt(0).toUpperCase() + palavra.slice(1);
 
-  palavraBox.textContent = palavraExibir;
+  palavraBox.textContent = pronuncia
+    ? `${palavraExibir} (${pronuncia})`
+    : palavraExibir;
+
   palavraBox.style.color = "white";
 
   input.value = "";
