@@ -1,130 +1,170 @@
-// Elementos
-const palavraBox = document.getElementById("palavra-box");
-const progressoBox = document.getElementById("progresso-box");
-const input = document.getElementById("resposta");
-const mensagemDiv = document.getElementById("mensagem");
-const traducaoBox = document.getElementById("traducao-box");
-const acertosBox = document.getElementById("acertos-box");
-const errosBox = document.getElementById("erros-box");
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Treino de Inglês</title>
 
-// Recorde
-let recorde = 0;
-fetch("recorde.txt")
-  .then(res => res.text())
-  .then(texto => {
-    recorde = parseInt(texto) || 0;
-  })
-  .catch(() => {
-    recorde = 0;
-  });
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
 
-// Embaralhar palavras
-const palavras = Object.keys(vocabulario).sort(() => Math.random() - 0.5);
+    #container {
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
 
-let i = 0;
-let acertos = 0;
-let erros = 0;
-const totalPalavras = palavras.length;
+    #palavra-box {
+      background-color: #ff7f50;
+      color: white;
+      font-size: 2rem;
+      font-weight: bold;
+      padding: 40px 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      margin-bottom: 20px;
+      min-height: 80px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-// Atualizar progresso
-function atualizarProgresso() {
-  progressoBox.textContent = `Acertos: ${acertos} / ${totalPalavras}`;
-  acertosBox.textContent = acertos;
-  errosBox.textContent = erros;
-}
+    #progresso-box {
+      background-color: #333;
+      color: #fff;
+      font-size: 1.2rem;
+      padding: 12px 20px;
+      border-radius: 10px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+      margin-bottom: 20px;
+    }
 
-// Mostrar palavra atual
-function mostrarPalavra() {
-  if (i >= palavras.length) {
-    finalizar();
-    return;
-  }
+    #resposta {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      margin-bottom: 5px; /* diminuído para aproximar dos quadrados */
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
 
-  const palavra = palavras[i];
-  const dados = vocabulario[palavra];
-  const pronuncia = Array.isArray(dados) ? dados[0].pronuncia : dados.pronuncia;
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      margin-bottom: 5px; /* diminuído para aproximar dos quadrados */
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      transition: background-color 0.3s;
+    }
 
-  // Palavra em inglês com inicial maiúscula
-  const palavraExibir = palavra.charAt(0).toUpperCase() + palavra.slice(1);
-  palavraBox.textContent = `${palavraExibir} (${pronuncia})`;
-  palavraBox.style.color = "white";
+    button:hover {
+      background-color: #45a049;
+    }
 
-  input.value = "";
-  input.focus();
-  mensagemDiv.textContent = "";
+    #mensagem {
+      font-size: 16px;
+      min-height: 20px;
+      margin-bottom: 2px; /* diminuído para aproximar dos quadrados */
+      color: #333;
+    }
 
-  // Resetar retângulo de tradução
-  traducaoBox.textContent = "";
-  traducaoBox.style.color = "#333";
+    /* Retângulo da tradução */
+    #traducao-box {
+      background-color: #fff;
+      color: #333;
+      font-size: 24px;
+      font-weight: bold;
+      padding: 12px 20px;
+      border-radius: 12px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+      margin-bottom: 15px;
+      min-height: 45px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: color 0.3s;
+    }
 
-  atualizarProgresso();
-}
+    /* Contadores de acertos/erros */
+    #contador-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2px; /* mais próximo do botão */
+    }
 
-// Responder
-function responder() {
-  if (i >= palavras.length) return;
+    #acertos-box, #erros-box {
+      flex: 1;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      padding: 12px 0;
+      border-radius: 12px;
+      color: white;
+      margin: 0 5px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    }
 
-  const palavra = palavras[i];
-  const dados = vocabulario[palavra];
-  const resposta = input.value.trim().toLowerCase();
+    #acertos-box {
+      background-color: #4CAF50;
+    }
 
-  if (!resposta) return;
+    #erros-box {
+      background-color: #f44336;
+    }
 
-  let correto = false;
-  let significadosArray = [];
+  </style>
+</head>
+<body>
 
-  if (Array.isArray(dados)) {
-    significadosArray = dados.map(d => d.significado);
-    const significadosLower = significadosArray.map(d => d.toLowerCase());
-    if (significadosLower.includes(resposta)) correto = true;
-  } else {
-    significadosArray = [dados.significado];
-    if (resposta === dados.significado.toLowerCase()) correto = true;
-  }
+  <div id="container">
 
-  // Mostrar tradução correta com cor
-  traducaoBox.textContent = significadosArray.join(" / ");
-  traducaoBox.style.color = correto ? "green" : "red";
+    <!-- Retângulo da palavra -->
+    <div id="palavra-box">Carregando...</div>
 
-  // Atualizar acertos e erros
-  if (correto) {
-    acertos++;
-  } else {
-    erros++;
-  }
+    <!-- Retângulo do progresso -->
+    <div id="progresso-box">Acertos: 0 / 0</div>
 
-  i++;
-  atualizarProgresso();
+    <!-- Input -->
+    <input
+      id="resposta"
+      type="text"
+      placeholder="Digite a tradução"
+      autocomplete="off"
+    >
 
-  // Pequeno delay para permitir ver a tradução antes de ir para a próxima palavra
-  setTimeout(mostrarPalavra, 1400);
-}
+    <!-- Retângulo da tradução correta -->
+    <div id="traducao-box"></div>
 
-// Finalizar
-function finalizar() {
-  palavraBox.textContent = "✅ Teste finalizado!";
-  input.disabled = true;
-  traducaoBox.textContent = "";
-  atualizarProgresso();
+    <!-- Botão -->
+    <button onclick="responder()">Responder</button>
 
-  if (acertos > recorde) {
-    recorde = acertos;
-    fetch("recorde.txt", {
-      method: "POST",
-      body: String(acertos)
-    });
-    mensagemDiv.innerHTML = `<br>🏆 Novo recorde! Acertos: ${acertos}`;
-  } else {
-    mensagemDiv.innerHTML = `<br>Você acertou ${acertos} palavras. Seu recorde: ${recorde}`;
-  }
-}
+    <!-- Mensagem -->
+    <div id="mensagem"></div>
 
-// Enter no input envia
-input.addEventListener("keydown", function(event) {
-  if (event.key === "Enter") {
-    responder();
-  }
-});
+    <!-- Contadores de acertos/erros -->
+    <div id="contador-container">
+      <div id="acertos-box">0</div>
+      <div id="erros-box">0</div>
+    </div>
 
-// Começa o jogo
-mostrarPalavra();
+  </div>
+
+  <!-- Scripts -->
+  <script src="vocabulario.js"></script>
+  <script src="script.js"></script>
+
+</body>
+</html>
