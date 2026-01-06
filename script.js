@@ -1,4 +1,6 @@
-// Elementos
+// ===============================
+// ELEMENTOS
+// ===============================
 const palavraBox = document.getElementById("palavra-box");
 const progressoBox = document.getElementById("progresso-box");
 const input = document.getElementById("resposta");
@@ -7,8 +9,11 @@ const traducaoBox = document.getElementById("traducao-box");
 const acertosBox = document.getElementById("acertos-box");
 const errosBox = document.getElementById("erros-box");
 
-// Recorde
+// ===============================
+// RECORDES
+// ===============================
 let recorde = 0;
+
 fetch("recorde.txt")
   .then(res => res.text())
   .then(texto => {
@@ -18,22 +23,58 @@ fetch("recorde.txt")
     recorde = 0;
   });
 
-// Embaralhar palavras
-const palavras = Object.keys(vocabulario).sort(() => Math.random() - 0.5);
+// ===============================
+// VOCABULÁRIO (arquivo txt)
+// ===============================
+let vocabulario = {};
+let palavras = [];
 
+fetch("vocabulario.txt")
+  .then(res => res.text())
+  .then(texto => {
+    const linhas = texto.split("\n");
+
+    linhas.forEach(linha => {
+      linha = linha.trim();
+      if (!linha || !linha.includes("=")) return;
+
+      const [palavra, traducoes] = linha.split("=");
+      const significados = traducoes
+        .split("/")
+        .map(t => t.trim());
+
+      vocabulario[palavra.trim()] = significados.map(s => ({
+        significado: s,
+        pronuncia: ""
+      }));
+    });
+
+    iniciarJogo();
+  });
+
+// ===============================
+// VARIÁVEIS DO JOGO
+// ===============================
 let i = 0;
 let acertos = 0;
 let erros = 0;
-const totalPalavras = palavras.length;
+
+// ===============================
+// FUNÇÕES
+// ===============================
+function iniciarJogo() {
+  palavras = Object.keys(vocabulario).sort(() => Math.random() - 0.5);
+  mostrarPalavra();
+}
 
 // Atualizar progresso
 function atualizarProgresso() {
-  progressoBox.textContent = `Acertos: ${acertos} / ${totalPalavras}`;
+  progressoBox.textContent = `Acertos: ${acertos} / ${palavras.length}`;
   acertosBox.textContent = acertos;
   errosBox.textContent = erros;
 }
 
-// Mostrar palavra atual
+// Mostrar palavra
 function mostrarPalavra() {
   if (i >= palavras.length) {
     finalizar();
@@ -42,18 +83,17 @@ function mostrarPalavra() {
 
   const palavra = palavras[i];
   const dados = vocabulario[palavra];
-  const pronuncia = Array.isArray(dados) ? dados[0].pronuncia : dados.pronuncia;
 
-  // Palavra em inglês com inicial maiúscula
-  const palavraExibir = palavra.charAt(0).toUpperCase() + palavra.slice(1);
-  palavraBox.textContent = `${palavraExibir} (${pronuncia})`;
+  const palavraExibir =
+    palavra.charAt(0).toUpperCase() + palavra.slice(1);
+
+  palavraBox.textContent = palavraExibir;
   palavraBox.style.color = "white";
 
   input.value = "";
   input.focus();
   mensagemDiv.textContent = "";
 
-  // Resetar retângulo de tradução
   traducaoBox.textContent = "";
   traducaoBox.style.color = "#333";
 
@@ -70,23 +110,14 @@ function responder() {
 
   if (!resposta) return;
 
-  let correto = false;
-  let significadosArray = [];
+  const significados = dados.map(d => d.significado);
+  const significadosLower = significados.map(s => s.toLowerCase());
 
-  if (Array.isArray(dados)) {
-    significadosArray = dados.map(d => d.significado);
-    const significadosLower = significadosArray.map(d => d.toLowerCase());
-    if (significadosLower.includes(resposta)) correto = true;
-  } else {
-    significadosArray = [dados.significado];
-    if (resposta === dados.significado.toLowerCase()) correto = true;
-  }
+  const correto = significadosLower.includes(resposta);
 
-  // Mostrar tradução correta com cor
-  traducaoBox.textContent = significadosArray.join(" / ");
+  traducaoBox.textContent = significados.join(" / ");
   traducaoBox.style.color = correto ? "green" : "red";
 
-  // Atualizar acertos e erros
   if (correto) {
     acertos++;
   } else {
@@ -96,7 +127,6 @@ function responder() {
   i++;
   atualizarProgresso();
 
-  // Pequeno delay para permitir ver a tradução antes de ir para a próxima palavra
   setTimeout(mostrarPalavra, 1400);
 }
 
@@ -119,12 +149,11 @@ function finalizar() {
   }
 }
 
-// Enter no input envia
+// ===============================
+// EVENTOS
+// ===============================
 input.addEventListener("keydown", function(event) {
   if (event.key === "Enter") {
     responder();
   }
 });
-
-// Começa o jogo
-mostrarPalavra();
