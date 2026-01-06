@@ -2,7 +2,6 @@
 // ELEMENTOS
 // ===============================
 const palavraBox = document.getElementById("palavra-box");
-const mensagemDiv = document.getElementById("mensagem");
 const opcoesContainer = document.getElementById("opcoes-container");
 const acertosBox = document.getElementById("acertos-box");
 const errosBox = document.getElementById("erros-box");
@@ -75,7 +74,8 @@ function atualizarContadores() {
 
 function mostrarPalavra() {
   if (i >= palavras.length) {
-    finalizar();
+    palavraBox.textContent = "✅ Teste finalizado!";
+    opcoesContainer.innerHTML = "";
     return;
   }
 
@@ -90,9 +90,7 @@ function mostrarPalavra() {
     ? `${palavraExibir} (${pronuncia})`
     : palavraExibir;
 
-  mensagemDiv.textContent = "";
   opcoesContainer.innerHTML = "";
-
   criarOpcoes(palavra);
   atualizarContadores();
 }
@@ -100,13 +98,14 @@ function mostrarPalavra() {
 function criarOpcoes(palavraAtual) {
   const dados = vocabulario[palavraAtual];
 
-  const corretaObj =
-    dados[Math.floor(Math.random() * dados.length)];
+  // escolhe UMA tradução correta aleatória
+  const corretaObj = dados[Math.floor(Math.random() * dados.length)];
   const correta = corretaObj.significado;
 
   let opcoes = [correta];
 
-  while (opcoes.length < 3) {
+  // agora são 4 opções
+  while (opcoes.length < 4) {
     const palavraAleatoria =
       palavras[Math.floor(Math.random() * palavras.length)];
 
@@ -130,7 +129,6 @@ function criarOpcoes(palavraAtual) {
 
     btn.onclick = () => {
       const botoes = document.querySelectorAll(".opcao-btn");
-
       botoes.forEach(b => b.disabled = true);
 
       if (opcao === correta) {
@@ -147,27 +145,12 @@ function criarOpcoes(palavraAtual) {
         });
       }
 
-      i++;
       atualizarContadores();
+      i++;
 
-      setTimeout(mostrarPalavra, 1000);
+      setTimeout(mostrarPalavra, 900);
     };
 
     opcoesContainer.appendChild(btn);
   });
-}
-
-function finalizar() {
-  palavraBox.textContent = "✅ Teste finalizado!";
-  opcoesContainer.innerHTML = "";
-
-  if (acertos > recorde) {
-    fetch("recorde.txt", {
-      method: "POST",
-      body: String(acertos)
-    });
-    mensagemDiv.innerHTML = `<br>🏆 Novo recorde! (${acertos})`;
-  } else {
-    mensagemDiv.innerHTML = `<br>Acertos: ${acertos} | Recorde: ${recorde}`;
-  }
 }
