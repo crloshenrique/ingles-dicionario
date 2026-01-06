@@ -1,7 +1,7 @@
 Agree (agrí) = Concordar
 Appear (apíer) = Aparecer
 Arrive (arhaíve) = Chegar
-Ask (asque) = Pedir
+Ask (asque) = Pedir/Perguntar
 Back (béck) = Voltar
 Bathe (beidhe) = Banhar
 Believe (belíve) = Acreditar
@@ -17,7 +17,7 @@ Change (chênge) = Mudar
 Choose (tchúuz) = Escolher
 Close (clôs) = Fechar
 Come (cãm) = Vir
-Connect (conect) = Ligar
+Connect (conect) = Ligar/Conectar
 Cook (câque) = Cozinhar
 Cry (chrái) = Chorar
 Cut (kãt) = Cortar
