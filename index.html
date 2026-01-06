@@ -33,11 +33,11 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
       margin-bottom: 20px;
     
-      /* NOVOS ESTILOS */
-      height: 140px;          /* altura fixa */
-      overflow-wrap: break-word; /* permite quebrar palavra longa */
-      word-break: break-word;    /* quebra palavras se necessário */
-      overflow-y: auto;       /* adiciona scroll vertical se a palavra for muito grande */
+      /* NOVOS ESTILOS PARA FIXAR TAMANHO */
+      height: 120px;           /* mantém o tamanho atual aproximado */
+      overflow-wrap: break-word; 
+      word-break: break-word;  
+      overflow-y: hidden;      /* esconde excesso de texto sem aumentar o retângulo */
     }
 
     #opcoes-container {
