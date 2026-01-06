@@ -2,7 +2,6 @@
 // ELEMENTOS
 // ===============================
 const palavraBox = document.getElementById("palavra-box");
-const progressoBox = document.getElementById("progresso-box");
 const mensagemDiv = document.getElementById("mensagem");
 const opcoesContainer = document.getElementById("opcoes-container");
 const acertosBox = document.getElementById("acertos-box");
@@ -15,9 +14,7 @@ let recorde = 0;
 
 fetch("recorde.txt")
   .then(res => res.text())
-  .then(texto => {
-    recorde = parseInt(texto) || 0;
-  })
+  .then(texto => recorde = parseInt(texto) || 0)
   .catch(() => recorde = 0);
 
 // ===============================
@@ -57,7 +54,7 @@ fetch("vocabulario.txt")
   });
 
 // ===============================
-// VARIÁVEIS DO JOGO
+// VARIÁVEIS
 // ===============================
 let i = 0;
 let acertos = 0;
@@ -71,8 +68,7 @@ function iniciarJogo() {
   mostrarPalavra();
 }
 
-function atualizarProgresso() {
-  progressoBox.textContent = `Acertos: ${acertos} / ${palavras.length}`;
+function atualizarContadores() {
   acertosBox.textContent = acertos;
   errosBox.textContent = erros;
 }
@@ -98,21 +94,18 @@ function mostrarPalavra() {
   opcoesContainer.innerHTML = "";
 
   criarOpcoes(palavra);
-
-  atualizarProgresso();
+  atualizarContadores();
 }
 
 function criarOpcoes(palavraAtual) {
   const dados = vocabulario[palavraAtual];
 
-  // escolhe UMA tradução correta aleatória
   const corretaObj =
     dados[Math.floor(Math.random() * dados.length)];
   const correta = corretaObj.significado;
 
   let opcoes = [correta];
 
-  // pega traduções erradas de outras palavras
   while (opcoes.length < 3) {
     const palavraAleatoria =
       palavras[Math.floor(Math.random() * palavras.length)];
@@ -120,36 +113,44 @@ function criarOpcoes(palavraAtual) {
     if (palavraAleatoria === palavraAtual) continue;
 
     const traducoes = vocabulario[palavraAleatoria];
-    const traducaoErrada =
+    const errada =
       traducoes[Math.floor(Math.random() * traducoes.length)].significado;
 
-    if (!opcoes.includes(traducaoErrada)) {
-      opcoes.push(traducaoErrada);
+    if (!opcoes.includes(errada)) {
+      opcoes.push(errada);
     }
   }
 
-  // embaralha
   opcoes.sort(() => Math.random() - 0.5);
 
-  // cria botões
   opcoes.forEach(opcao => {
     const btn = document.createElement("button");
     btn.textContent = opcao;
     btn.className = "opcao-btn";
 
     btn.onclick = () => {
+      const botoes = document.querySelectorAll(".opcao-btn");
+
+      botoes.forEach(b => b.disabled = true);
+
       if (opcao === correta) {
+        btn.classList.add("correta");
         acertos++;
-        mensagemDiv.textContent = "✅ Correto!";
       } else {
+        btn.classList.add("errada");
         erros++;
-        mensagemDiv.textContent = `❌ Errado!`;
+
+        botoes.forEach(b => {
+          if (b.textContent === correta) {
+            b.classList.add("correta");
+          }
+        });
       }
 
       i++;
-      atualizarProgresso();
+      atualizarContadores();
 
-      setTimeout(mostrarPalavra, 800);
+      setTimeout(mostrarPalavra, 1000);
     };
 
     opcoesContainer.appendChild(btn);
@@ -161,13 +162,12 @@ function finalizar() {
   opcoesContainer.innerHTML = "";
 
   if (acertos > recorde) {
-    recorde = acertos;
     fetch("recorde.txt", {
       method: "POST",
       body: String(acertos)
     });
-    mensagemDiv.innerHTML = `<br>🏆 Novo recorde! Acertos: ${acertos}`;
+    mensagemDiv.innerHTML = `<br>🏆 Novo recorde! (${acertos})`;
   } else {
-    mensagemDiv.innerHTML = `<br>Você acertou ${acertos} palavras. Seu recorde: ${recorde}`;
+    mensagemDiv.innerHTML = `<br>Acertos: ${acertos} | Recorde: ${recorde}`;
   }
 }
