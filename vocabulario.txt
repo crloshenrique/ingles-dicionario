@@ -97,4 +97,4 @@ Want (uant) = Querer
 Wash (uáche) = Lavar
 Watch (uátch) = Assistir
 Win (uín) = Ganhar
-Write (rúate) = Escrever
+Write (rhúate) = Escrever
