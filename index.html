@@ -31,7 +31,6 @@
       width: 100%;
     }
 
-    /* Garante que os botões sejam clicáveis */
     button {
       padding: 14px;
       font-size: 18px;
@@ -40,11 +39,11 @@
       cursor: pointer;
       background: #666;
       color: white;
-      transition: background 0.2s;
+      transition: opacity 0.2s;
       -webkit-tap-highlight-color: transparent;
     }
 
-    button:active { background: #444; }
+    button:active { opacity: 0.8; }
 
     #palavra-box {
       background: #666;
@@ -70,7 +69,7 @@
     .opcao-btn {
       width: calc(50% - 5px);
       background: #d9d9d9;
-      color: #333;
+      color: #666;
     }
 
     .correta { background: #4CAF50 !important; color: white; }
@@ -97,7 +96,7 @@
     #btn-reiniciar {
       display: none;
       width: 100%;
-      background: #333;
+      background: #666;
       margin-top: 15px;
     }
 
@@ -113,24 +112,26 @@
 
   <div id="container">
     <div id="menu-principal" class="menu">
-      <h2>Treino de Inglês</h2>
+      <h2>Escolha como deseja praticar</h2>
       <p id="status-load">Carregando vocabulário...</p>
-      <button id="btn-niveis" onclick="abrirMenuNiveis()" style="display:none">Jogar por níveis</button>
       <button id="btn-intervalos" onclick="abrirMenuIntervalos()" style="display:none">Escolher palavras</button>
+      <button id="btn-niveis" onclick="abrirMenuNiveis()" style="display:none">Jogar por níveis</button>
     </div>
 
     <div id="menu-niveis" class="menu" style="display:none">
-      <button onclick="iniciarNivel(25)">Iniciante (25)</button>
-      <button onclick="iniciarNivel(50)">Intermediário (50)</button>
-      <button onclick="iniciarNivel(100)">Avançado (100)</button>
-      <button onclick="iniciarNivel(9999)">Todas</button>
+      <button onclick="iniciarNivel(25)" style="background: #10a2dd;">Iniciante</button>
+      <button onclick="iniciarNivel(50)" style="background: #5abb6a;">Intermediário</button>
+      <button onclick="iniciarNivel(100)" style="background: #f99c35;">Avançado</button>
+      <button onclick="iniciarNivel(vocabulario.length)" style="background: #f14738;">Pro</button>
+      <button onclick="window.location.reload()" style="background:#666;">Voltar</button>
     </div>
 
     <div id="menu-intervalos" class="menu" style="display:none">
-      <button onclick="iniciarIntervalo(0,25)">0 à 25</button>
-      <button onclick="iniciarIntervalo(25,50)">25 à 50</button>
-      <button onclick="iniciarIntervalo(50,75)">50 à 75</button>
-      <button onclick="iniciarIntervalo(75,100)">75 à 100</button>
+      <button onclick="iniciarIntervalo(0,25)" style="background: #10a2dd;">1 ⮕ 25 palavras</button>
+      <button onclick="iniciarIntervalo(25,50)" style="background: #5abb6a;">26 ⮕ 50 palavras</button>
+      <button onclick="iniciarIntervalo(50,75)" style="background: #f99c35;">51 ⮕ 75 palavras</button>
+      <button onclick="iniciarIntervalo(75,100)" style="background: #f14738;">76 ⮕ 100 palavras</button>
+      <button onclick="window.location.reload()" style="background:#666;">Voltar</button>
     </div>
 
     <div id="palavra-box"></div>
