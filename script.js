@@ -6,46 +6,46 @@ const contadorContainer = document.getElementById("contador-container");
 const resultadosLista = document.getElementById("resultados-lista");
 const btnReiniciar = document.getElementById("btn-reiniciar");
 
-//Apenas para testar se o Github atualizou:
-//document.getElementById("menu-principal").insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem;">Git 013</p>');
+// Teste de atualização:
+document.getElementById("menu-principal").insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem;">Version 3.00.44</p>');
 
 const menuPrincipal = document.getElementById("menu-principal");
 const menuNiveis = document.getElementById("menu-niveis");
 const menuIntervalos = document.getElementById("menu-intervalos");
 
-let vocabulario = {};
-let ordemArquivo = [];
+let vocabulario = []; 
 let palavrasParaOJogo = [];
+let palavraAtualObjeto = null;
 
-let i = 0;
 let acertos = 0;
 let erros = 0;
-let palavrasAcertadas = [];
-let palavrasErradas = [];
+let historicoResultados = []; 
 
-// CARREGAR DADOS
+/* ===============================
+   CARREGAR VOCABULÁRIO
+================================ */
 fetch("vocabulario.txt")
   .then(res => res.text())
   .then(texto => {
-    texto.split("\n").forEach(linha => {
-      linha = linha.trim();
-      if (!linha || !linha.includes("=")) return;
-
+    const linhas = texto.split("\n")
+                        .map(l => l.trim())
+                        .filter(l => l.includes("="));
+    
+    linhas.forEach(linha => {
       const [esquerda, direita] = linha.split("=");
-      const chave = esquerda.replace(/\(.*?\)/, "").trim().toLowerCase();
+      const exibir = esquerda.trim();
       const traducoes = direita.split("/").map(t => t.trim());
 
-      vocabulario[chave] = { exibir: esquerda.trim(), traducoes: traducoes };
-      ordemArquivo.push(chave);
+      vocabulario.push({
+        exibir: exibir,
+        correta: traducoes[0],
+        todas: traducoes
+      });
     });
 
-    // Libera o menu após carregar
     document.getElementById("status-load").style.display = "none";
     document.getElementById("btn-niveis").style.display = "block";
     document.getElementById("btn-intervalos").style.display = "block";
-  })
-  .catch(err => {
-    document.getElementById("status-load").textContent = "Erro ao carregar vocabulario.txt";
   });
 
 function abrirMenuNiveis() {
@@ -58,55 +58,56 @@ function abrirMenuIntervalos() {
   menuIntervalos.style.display = "flex";
 }
 
-function iniciarNivel(qtd) {
-  palavrasParaOJogo = ordemArquivo.slice(0, qtd);
-  iniciarJogo();
+function iniciarNivel(quantidade) {
+    palavrasParaOJogo = vocabulario.slice(0, quantidade);
+    iniciarJogo();
 }
 
 function iniciarIntervalo(inicio, fim) {
-  palavrasParaOJogo = ordemArquivo.slice(inicio, fim);
-  iniciarJogo();
+    palavrasParaOJogo = vocabulario.slice(inicio, fim);
+    iniciarJogo();
 }
 
 function iniciarJogo() {
   menuNiveis.style.display = "none";
   menuIntervalos.style.display = "none";
-  
   palavraBox.style.display = "flex";
   opcoesContainer.style.display = "flex";
   contadorContainer.style.display = "flex";
 
   palavrasParaOJogo.sort(() => Math.random() - 0.5);
-  i = 0; acertos = 0; erros = 0;
-  palavrasAcertadas = []; palavrasErradas = [];
   
-  mostrarPalavra();
+  acertos = 0; 
+  erros = 0;
+  acertosBox.textContent = "0";
+  errosBox.textContent = "0";
+  historicoResultados = []; 
+  resultadosLista.innerHTML = "";
+  btnReiniciar.style.display = "none";
+  
+  proximaRodada();
 }
 
-function mostrarPalavra() {
-  if (i >= palavrasParaOJogo.length) {
+function proximaRodada() {
+  if (palavrasParaOJogo.length === 0) {
     finalizarTeste();
     return;
   }
 
-  const chave = palavrasParaOJogo[i];
-  palavraBox.textContent = vocabulario[chave].exibir;
+  palavraAtualObjeto = palavrasParaOJogo.shift();
+  palavraBox.textContent = palavraAtualObjeto.exibir;
   opcoesContainer.innerHTML = "";
-  
-  criarOpcoes(chave);
-  acertosBox.textContent = acertos;
-  errosBox.textContent = erros;
+  criarOpcoes(palavraAtualObjeto);
 }
 
-function criarOpcoes(palavraAtual) {
-  const corretaLista = vocabulario[palavraAtual].traducoes;
-  const correta = corretaLista[Math.floor(Math.random() * corretaLista.length)];
+function criarOpcoes(objetoAtual) {
+  const correta = objetoAtual.correta;
   let opcoes = [correta];
 
   while (opcoes.length < 4) {
-    const pAleatoria = ordemArquivo[Math.floor(Math.random() * ordemArquivo.length)];
-    const errada = vocabulario[pAleatoria].traducoes[0];
-    if (!opcoes.includes(errada)) opcoes.push(errada);
+    const sorteio = vocabulario[Math.floor(Math.random() * vocabulario.length)];
+    const distracao = sorteio.correta;
+    if (!opcoes.includes(distracao)) opcoes.push(distracao);
   }
 
   opcoes.sort(() => Math.random() - 0.5);
@@ -119,19 +120,26 @@ function criarOpcoes(palavraAtual) {
       const todos = document.querySelectorAll(".opcao-btn");
       todos.forEach(b => b.disabled = true);
 
+      let itemHistorico = {
+        texto: `${objetoAtual.exibir} = ${correta}`,
+        cor: ""
+      };
+
       if (opcao === correta) {
         btn.classList.add("correta");
         acertos++;
-        palavrasAcertadas.push(`${vocabulario[palavraAtual].exibir} = ${correta}`);
+        acertosBox.textContent = acertos; // Atualiza placar na hora
+        itemHistorico.cor = "#4CAF50";
       } else {
         btn.classList.add("errada");
         erros++;
-        palavrasErradas.push(`${vocabulario[palavraAtual].exibir} = ${correta}`);
+        errosBox.textContent = erros; // Atualiza placar na hora
+        itemHistorico.cor = "#f44336";
         todos.forEach(b => { if (b.textContent === correta) b.classList.add("correta"); });
       }
 
-      i++;
-      setTimeout(mostrarPalavra, 1000);
+      historicoResultados.push(itemHistorico);
+      setTimeout(proximaRodada, 1400);
     };
     opcoesContainer.appendChild(btn);
   });
@@ -140,15 +148,11 @@ function criarOpcoes(palavraAtual) {
 function finalizarTeste() {
   palavraBox.textContent = "Teste finalizado!";
   opcoesContainer.style.display = "none";
-  
-  palavrasAcertadas.forEach(p => criarCard(p, "#4CAF50"));
-  palavrasErradas.forEach(p => criarCard(p, "#f44336"));
+  historicoResultados.forEach(item => {
+    const box = document.createElement("div");
+    box.textContent = item.texto;
+    box.style.cssText = `background:${item.cor}; color:white; padding:12px; border-radius:10px; font-weight:bold; margin-bottom: 8px;`;
+    resultadosLista.appendChild(box);
+  });
   btnReiniciar.style.display = "block";
-}
-
-function criarCard(texto, cor) {
-  const box = document.createElement("div");
-  box.textContent = texto;
-  box.style.cssText = `background:${cor}; color:white; padding:12px; border-radius:10px; font-weight:bold;`;
-  resultadosLista.appendChild(box);
 }
