@@ -19,7 +19,7 @@ document.getElementById("menu-temas").insertAdjacentHTML('beforeend', '<p style=
 // ==========================================
 // CONFIGURAÇÃO DE DICIONÁRIOS (Atualizado para minúsculo)
 // ==========================================
-const meusDicionarios = ["verbos", "lugares", "cores", "supermecado", "objetos"]; 
+const meusDicionarios = ["verbos", "cores", "supermecado", "objetos"]; 
 
 let vocabulario = []; 
 let palavrasParaOJogo = [];
