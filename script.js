@@ -13,7 +13,7 @@ const menuIntervalos = document.getElementById("menu-intervalos");
 const listaTemasBotoes = document.getElementById("lista-temas-botoes");
 
 // Teste de atualização solicitado:
-document.getElementById("menu-temas").insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem;">Version 3.00.48</p>');
+document.getElementById("menu-temas").insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem;">Version 3.00.49</p>');
 
 // ==========================================
 // CONFIGURAÇÃO DE TEMAS (SÓ MEXA AQUI)
