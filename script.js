@@ -13,12 +13,12 @@ const menuIntervalos = document.getElementById("menu-intervalos");
 const listaTemasBotoes = document.getElementById("lista-temas-botoes");
 
 // Teste de atualização solicitado:
-document.getElementById("menu-temas").insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem;">Version 3.00.50</p>');
+document.getElementById("menu-temas").insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem;">Version 3.00.51</p>');
 
 // ==========================================
 // CONFIGURAÇÃO DE DICIONÁRIOS
 // ==========================================
-const meusDicionarios = ["Verbos", "Lugares"]; 
+const meusDicionarios = ["Verbos", "Lugares", "Cores"]; 
 
 let vocabulario = []; 
 let palavrasParaOJogo = [];
