@@ -6,112 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         /* ESTILOS GERAIS */
-        body { 
-            font-family: Arial, sans-serif; 
-            background: #f0f0f0; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
-            margin: 0; 
-            padding: 15px; 
-            box-sizing: border-box; 
-        }
-
-        #container { 
-            width: 100%; 
-            max-width: 400px; 
-            text-align: center; 
-            position: relative; 
-        }
-
-        .menu { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 12px; 
-            width: 100%; 
-        }
+        body { font-family: Arial, sans-serif; background: #f0f0f0; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 15px; box-sizing: border-box; }
+        #container { width: 100%; max-width: 400px; text-align: center; position: relative; }
+        .menu { display: flex; flex-direction: column; gap: 12px; width: 100%; }
 
         /* BOTÕES */
-        button { 
-            padding: 14px; 
-            font-size: 18px; 
-            border-radius: 10px; 
-            border: none; 
-            cursor: pointer; 
-            background: #666; 
-            color: white; 
-            transition: opacity 0.2s; 
-            -webkit-tap-highlight-color: transparent; 
-        }
-
+        button { padding: 14px; font-size: 18px; border-radius: 10px; border: none; cursor: pointer; background: #666; color: white; transition: opacity 0.2s; -webkit-tap-highlight-color: transparent; }
         button:active { opacity: 0.8; }
 
         /* BOX DA PALAVRA E OPÇÕES */
-        #palavra-box { 
-            background: #666; 
-            color: white; 
-            font-size: 1.8rem; 
-            font-weight: bold; 
-            height: 125px; 
-            border-radius: 15px; 
-            display: none; 
-            align-items: center; 
-            justify-content: center; 
-            margin-bottom: 20px; 
-            padding: 10px; 
-        }
-
-        #opcoes-container { 
-            display: none; 
-            flex-wrap: wrap; 
-            gap: 10px; 
-            margin-bottom: 20px; 
-        }
-
-        .opcao-btn { 
-            width: calc(50% - 5px); 
-            background: #d9d9d9; 
-            color: #666; 
-        }
+        #palavra-box { background: #666; color: white; font-size: 1.8rem; font-weight: bold; height: 125px; border-radius: 15px; display: none; align-items: center; justify-content: center; margin-bottom: 20px; padding: 10px; }
+        #opcoes-container { display: none; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+        .opcao-btn { width: calc(50% - 5px); background: #d9d9d9; color: #666; }
 
         /* CORES DE RESPOSTA */
         .correta { background: #4CAF50 !important; color: white; }
         .errada { background: #f44336 !important; color: white; }
 
         /* PLACAR E RESULTADOS */
-        #contador-container { 
-            display: none; 
-            gap: 10px; 
-            margin-bottom: 20px; 
-        }
-
-        #acertos-box, #erros-box { 
-            flex: 1; 
-            padding: 12px; 
-            font-size: 20px; 
-            font-weight: bold; 
-            color: white; 
-            border-radius: 12px; 
-        }
-
+        #contador-container { display: none; gap: 10px; margin-bottom: 20px; }
+        #acertos-box, #erros-box { flex: 1; padding: 12px; font-size: 20px; font-weight: bold; color: white; border-radius: 12px; }
         #acertos-box { background: #4CAF50; }
         #erros-box { background: #f44336; }
-
-        #btn-reiniciar { 
-            display: none; 
-            width: 100%; 
-            background: #666; 
-            margin-top: 15px; 
-        }
-
-        #resultados-lista { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 8px; 
-            margin-top: 10px; 
-        }
-        
+        #btn-reiniciar { display: none; width: 100%; background: #666; margin-top: 15px; }
+        #resultados-lista { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
         h2 { color: #444; margin-bottom: 10px; }
     </style>
 </head>
@@ -121,20 +39,15 @@
 
         <div id="menu-temas" class="menu">
             <h2>Escolha um dicionário</h2>
-            <div id="lista-temas-botoes" class="menu">
-                </div>
+            <div id="lista-temas-botoes" class="menu"></div>
         </div>
 
         <div id="menu-principal" class="menu" style="display:none">
             <h2>Como deseja praticar?</h2>
             <p id="status-load" style="display:none">Carregando...</p>
-            
             <button id="btn-intervalos" onclick="abrirMenuIntervalos()">Escolher palavras</button>
             <button id="btn-niveis" onclick="abrirMenuNiveis()">Jogar por níveis</button>
-            
-            <button onclick="window.location.reload()" style="background:#666;">
-                Voltar
-            </button>
+            <button onclick="window.location.reload()" style="background:#666;">Voltar</button>
         </div>
 
         <div id="menu-niveis" class="menu" style="display:none">
@@ -155,18 +68,15 @@
 
         <div id="palavra-box"></div>
         <div id="opcoes-container"></div>
-
         <div id="contador-container">
             <div id="acertos-box">0</div>
             <div id="erros-box">0</div>
         </div>
-
         <div id="resultados-lista"></div>
         <button id="btn-reiniciar" onclick="window.location.reload()">Jogar Novamente</button>
 
     </div>
 
     <script src="script.js"></script>
-
 </body>
 </html>
