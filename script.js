@@ -7,7 +7,7 @@ const resultadosLista = document.getElementById("resultados-lista");
 const btnReiniciar = document.getElementById("btn-reiniciar");
 
 // Teste de atualização:
-document.getElementById("menu-principal").insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem;">Version 3.00.45</p>');
+document.getElementById("menu-principal").insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem;">Version 3.00.46</p>');
 
 const menuPrincipal = document.getElementById("menu-principal");
 const menuNiveis = document.getElementById("menu-niveis");
@@ -24,7 +24,7 @@ let historicoResultados = [];
 /* ===============================
    CARREGAR VOCABULÁRIO
 ================================ */
-fetch("vocabulario.txt")
+fetch("Dicionários/vocabulario.txt")
   .then(res => res.text())
   .then(texto => {
     const linhas = texto.split("\n")
