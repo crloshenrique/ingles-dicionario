@@ -15,7 +15,7 @@ const menuIntervalos = document.getElementById("menu-intervalos");
 const listaTemasBotoes = document.getElementById("lista-temas-botoes");
 
 // Teste de atualização solicitado:
-menu-usuarios.insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem;">Version 0.61</p>');
+menuPrincipal.insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem;">Version 0.61</p>');
 
 const meusDicionarios = ["verbos"]; 
 let vocabulario = []; 
