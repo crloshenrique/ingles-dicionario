@@ -11,7 +11,7 @@
         .menu { display: flex; flex-direction: column; gap: 12px; width: 100%; }
 
         /* SELEÇÃO DE USUÁRIO - AJUSTADO */
-        .usuarios-flex { display: flex; justify-content: center; gap: 15px; margin-top: 15px; } /* Reduzi de 30px para 15px */
+        .usuarios-flex { display: flex; justify-content: center; gap: 15px; margin-top: 15px; }
         .usuario-card { 
             cursor: pointer; 
             display: flex; 
@@ -69,7 +69,7 @@
         #erros-box { background: #f44336; }
         #btn-reiniciar { display: none; width: 100%; background: #5e5e5e; margin-top: 15px; }
         #resultados-lista { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
-        h2 { color: #444; margin-bottom: 5px; } /* Reduzi a margem inferior do título */
+        h2 { color: #444; margin-bottom: 5px; } 
     </style>
 </head>
 <body>
@@ -108,7 +108,7 @@
             <p id="status-load" style="display:none">Carregando...</p>
             <button id="btn-intervalos" onclick="abrirMenuIntervalos()" class="btn-azul">Escolher palavras</button>
             <button id="btn-niveis" onclick="abrirMenuNiveis()" class="btn-azul">Praticar por níveis</button>
-            <button onclick="voltarAoPrincipal()" style="background:#5e5e5e;">Voltar</button>
+            <button onclick="voltarParaDicionarios()" style="background:#5e5e5e;">Voltar</button>
         </div>
 
         <div id="menu-niveis" class="menu" style="display:none">
@@ -116,7 +116,7 @@
             <button onclick="iniciarNivel(50)" style="background: #5abb6a;">Intermediário</button>
             <button onclick="iniciarNivel(75)" style="background: #f99c35;">Avançado</button>
             <button onclick="iniciarNivel(vocabulario.length)" style="background: #f14738;">Pro</button>
-            <button onclick="voltarAoPrincipal()" style="background:#5e5e5e;">Voltar</button>
+            <button onclick="voltarAoMenuPraticar()" style="background:#5e5e5e;">Voltar</button>
         </div>
 
         <div id="menu-intervalos" class="menu" style="display:none">
@@ -124,7 +124,7 @@
             <button onclick="iniciarIntervalo(25,50)" style="background: #5abb6a;">26 ⮕ 50 palavras</button>
             <button onclick="iniciarIntervalo(50,75)" style="background: #f99c35;">51 ⮕ 75 palavras</button>
             <button onclick="iniciarIntervalo(75,100)" style="background: #f14738;">76 ⮕ 100 palavras</button>
-            <button onclick="voltarAoPrincipal()" style="background:#5e5e5e;">Voltar</button>
+            <button onclick="voltarAoMenuPraticar()" style="background:#5e5e5e;">Voltar</button>
         </div>
 
         <div id="palavra-box"></div>
