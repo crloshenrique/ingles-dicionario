@@ -5,6 +5,7 @@ const acertosBox = document.getElementById("acertos-box");
 const errosBox = document.getElementById("erros-box");
 const contadorContainer = document.getElementById("contador-container");
 const btnReiniciar = document.getElementById("btn-reiniciar");
+const resultadosLista = document.getElementById("resultados-lista"); // Referência para a lista
 
 const menuUsuarios = document.getElementById("menu-usuarios");
 const menuHub = document.getElementById("menu-hub");
@@ -14,9 +15,8 @@ const menuNiveis = document.getElementById("menu-niveis");
 const menuIntervalos = document.getElementById("menu-intervalos");
 const listaTemasBotoes = document.getElementById("lista-temas-botoes");
 
-menuUsuarios.insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem; margin-top:20px;">Version 0.76</p>');
+menuUsuarios.insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem; margin-top:20px;">Version 0.78</p>');
 
-// NOVA ESTRUTURA: Define o arquivo .txt e o nome que aparece no botão
 const meusDicionarios = [
     { arquivo: "verbosi", exibicao: "Verbos I" }
 ]; 
@@ -25,6 +25,7 @@ let vocabulario = [];
 let palavrasParaOJogo = [];
 let acertos = 0;
 let erros = 0;
+let historicoResultados = []; // Array para armazenar o progresso
 
 window.onload = gerarMenuTemas;
 
@@ -54,7 +55,6 @@ function voltarParaDicionarios() {
     menuTemas.style.display = "flex";
 }
 
-// ATUALIZADO: Agora usa os nomes de exibição definidos no array
 function gerarMenuTemas() {
     listaTemasBotoes.innerHTML = "";
     meusDicionarios.forEach(item => {
@@ -84,7 +84,6 @@ function carregarVocabulario(arquivo) {
         })
         .catch(err => {
             console.error("Erro ao carregar dicionário:", err);
-            alert("Erro ao carregar o arquivo: " + arquivo);
             statusLoad.style.display = "none";
         });
 }
@@ -100,9 +99,15 @@ function iniciarJogo() {
     palavraBox.style.display = "flex";
     opcoesContainer.style.display = "flex";
     contadorContainer.style.display = "flex";
+    
+    // Reset de variáveis e interface
     palavrasParaOJogo.sort(() => Math.random() - 0.5);
     acertos = 0; erros = 0;
     acertosBox.textContent = "0"; errosBox.textContent = "0";
+    historicoResultados = []; 
+    resultadosLista.innerHTML = ""; 
+    btnReiniciar.style.display = "none";
+
     proximaRodada();
 }
 
@@ -125,14 +130,27 @@ function proximaRodada() {
         btn.onclick = () => {
             const todos = document.querySelectorAll(".opcao-btn");
             todos.forEach(b => b.disabled = true);
+
+            // Prepara o item para a lista de resultados final
+            let itemHistorico = {
+                texto: `${atual.exibir} = ${atual.correta}`,
+                cor: ""
+            };
+
             if (opcao === atual.correta) {
                 btn.classList.add("correta");
-                acertos++; acertosBox.textContent = acertos;
+                acertos++; 
+                acertosBox.textContent = acertos;
+                itemHistorico.cor = "#4CAF50"; // Verde
             } else {
                 btn.classList.add("errada");
-                erros++; errosBox.textContent = erros;
+                erros++; 
+                errosBox.textContent = erros;
+                itemHistorico.cor = "#f44336"; // Vermelho
                 todos.forEach(b => { if (b.textContent === atual.correta) b.classList.add("correta"); });
             }
+
+            historicoResultados.push(itemHistorico);
             setTimeout(proximaRodada, 1400);
         };
         opcoesContainer.appendChild(btn);
@@ -142,6 +160,16 @@ function proximaRodada() {
 function finalizarTeste() {
     palavraBox.textContent = "Teste finalizado!";
     opcoesContainer.style.display = "none";
+    
+    // Gerar a lista visual no final
+    historicoResultados.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "item-historico";
+        div.style.backgroundColor = item.cor;
+        div.textContent = item.texto;
+        resultadosLista.appendChild(div);
+    });
+
     btnReiniciar.style.display = "block";
 }
 
