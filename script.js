@@ -13,10 +13,12 @@ const menuTemas = document.getElementById("menu-temas");
 const menuPrincipal = document.getElementById("menu-principal");
 const menuNiveis = document.getElementById("menu-niveis");
 const menuIntervalos = document.getElementById("menu-intervalos");
+const areaRevisao = document.getElementById("area-revisao");
+const corpoTabela = document.getElementById("corpo-tabela");
 const listaTemasBotoes = document.getElementById("lista-temas-botoes");
 
-// Adição da Versão no menu de login
-menuUsuarios.insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem; margin-top:20px;">Version 0.63</p>');
+// Versão atualizada
+menuUsuarios.insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem; margin-top:20px;">Version 0.64</p>');
 
 const meusDicionarios = ["verbos"]; 
 let vocabulario = []; 
@@ -24,15 +26,16 @@ let palavrasParaOJogo = [];
 let palavraAtualObjeto = null;
 let acertos = 0;
 let erros = 0;
-let historicoResultados = []; 
+let usuarioAtual = "";
 
 window.onload = gerarMenuTemas;
 
 // ==========================================
-// FUNÇÕES DE NAVEGAÇÃO (CORRIGIDAS)
+// NAVEGAÇÃO E USUÁRIOS
 // ==========================================
 
 function selecionarUsuario(nome) {
+    usuarioAtual = nome;
     menuUsuarios.style.display = "none";
     menuHub.style.display = "flex";
 }
@@ -47,21 +50,72 @@ function voltarParaHub() {
     menuHub.style.display = "flex";
 }
 
-// NOVO: Volta dos Níveis/Intervalos para o menu "Como deseja praticar?"
 function voltarAoMenuPraticar() {
     menuNiveis.style.display = "none";
     menuIntervalos.style.display = "none";
     menuPrincipal.style.display = "flex";
 }
 
-// NOVO: Volta do "Como deseja praticar?" para os dicionários
 function voltarParaDicionarios() {
     menuPrincipal.style.display = "none";
     menuTemas.style.display = "flex";
 }
 
 // ==========================================
-// LÓGICA DO JOGO
+// LÓGICA DE REVISÃO
+// ==========================================
+
+function registrarErro(objeto) {
+    const chave = `erros_${usuarioAtual}`;
+    let lista = JSON.parse(localStorage.getItem(chave)) || [];
+    if (!lista.find(item => item.exibir === objeto.exibir)) {
+        lista.push(objeto);
+        localStorage.setItem(chave, JSON.stringify(lista));
+    }
+}
+
+function abrirRevisao() {
+    menuHub.style.display = "none";
+    areaRevisao.style.display = "flex";
+    renderizarTabela();
+}
+
+function fecharRevisao() {
+    areaRevisao.style.display = "none";
+    menuHub.style.display = "flex";
+}
+
+function renderizarTabela() {
+    corpoTabela.innerHTML = "";
+    const chave = `erros_${usuarioAtual}`;
+    const lista = JSON.parse(localStorage.getItem(chave)) || [];
+
+    lista.forEach((item, index) => {
+        const tr = document.createElement("tr");
+        
+        // Se houver múltiplas traduções separadas por /, mostra com vírgula
+        const significadoFormatado = item.correta.replace(/\//g, ", ");
+
+        tr.innerHTML = `
+            <td class="col-palavra">${item.exibir.toUpperCase()}</td>
+            <td class="col-pronuncia">/pronúncia/</td>
+            <td class="col-significado">${significadoFormatado.toLowerCase()}</td>
+            <td><button class="btn-remover" onclick="removerErro(${index})">X</button></td>
+        `;
+        corpoTabela.appendChild(tr);
+    });
+}
+
+function removerErro(index) {
+    const chave = `erros_${usuarioAtual}`;
+    let lista = JSON.parse(localStorage.getItem(chave)) || [];
+    lista.splice(index, 1);
+    localStorage.setItem(chave, JSON.stringify(lista));
+    renderizarTabela();
+}
+
+// ==========================================
+// CORE DO JOGO
 // ==========================================
 
 function gerarMenuTemas() {
@@ -78,15 +132,14 @@ function gerarMenuTemas() {
 function carregarVocabulario(arquivo) {
     const statusLoad = document.getElementById("status-load");
     statusLoad.style.display = "block";
-    statusLoad.textContent = `Carregando ${arquivo}...`;
-    vocabulario = []; 
+    statusLoad.textContent = "Carregando...";
     fetch(`dicionarios/${arquivo}.txt`)
         .then(res => res.text())
         .then(texto => {
-            const linhas = texto.split(/\r?\n/).map(l => l.trim()).filter(l => l !== "" && l.includes("="));
-            linhas.forEach(linha => {
-                const [esquerda, direita] = linha.split("=");
-                vocabulario.push({ exibir: esquerda.trim(), correta: direita.split("/")[0].trim() });
+            const linhas = texto.split(/\r?\n/).filter(l => l.includes("="));
+            vocabulario = linhas.map(linha => {
+                const [esq, dir] = linha.split("=");
+                return { exibir: esq.trim(), correta: dir.trim() };
             });
             menuTemas.style.display = "none";
             menuPrincipal.style.display = "flex";
@@ -94,25 +147,10 @@ function carregarVocabulario(arquivo) {
         });
 }
 
-function abrirMenuNiveis() {
-    menuPrincipal.style.display = "none";
-    menuNiveis.style.display = "flex";
-}
-
-function abrirMenuIntervalos() {
-    menuPrincipal.style.display = "none";
-    menuIntervalos.style.display = "flex";
-}
-
-function iniciarNivel(quantidade) {
-    palavrasParaOJogo = vocabulario.slice(0, quantidade);
-    iniciarJogo();
-}
-
-function iniciarIntervalo(inicio, fim) {
-    palavrasParaOJogo = vocabulario.slice(inicio, fim);
-    iniciarJogo();
-}
+function abrirMenuNiveis() { menuPrincipal.style.display = "none"; menuNiveis.style.display = "flex"; }
+function abrirMenuIntervalos() { menuPrincipal.style.display = "none"; menuIntervalos.style.display = "flex"; }
+function iniciarNivel(qtd) { palavrasParaOJogo = vocabulario.slice(0, qtd); iniciarJogo(); }
+function iniciarIntervalo(i, f) { palavrasParaOJogo = vocabulario.slice(i, f); iniciarJogo(); }
 
 function iniciarJogo() {
     menuNiveis.style.display = "none";
@@ -153,6 +191,7 @@ function criarOpcoes(objetoAtual) {
             } else {
                 btn.classList.add("errada");
                 erros++; errosBox.textContent = erros;
+                registrarErro(objetoAtual); // SALVA O ERRO
                 todos.forEach(b => { if (b.textContent === objetoAtual.correta) b.classList.add("correta"); });
             }
             setTimeout(proximaRodada, 1400);
