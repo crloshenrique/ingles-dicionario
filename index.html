@@ -14,14 +14,12 @@
         .usuarios-flex { display: flex; justify-content: center; gap: 15px; margin-top: 15px; }
         .usuario-card { cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: transform 0.3s ease; -webkit-tap-highlight-color: transparent; width: 130px; }
         .usuario-card:hover { transform: scale(1.1); }
-        .usuario-card:active { transform: scale(0.95); }
         .usuario-card img { width: 110px; height: 110px; margin-bottom: 12px; background: #d9d9d9; border-radius: 30px; padding: 15px; object-fit: contain; box-sizing: border-box; }
         .usuario-card span { font-size: 1.3rem; font-weight: bold; color: #444; }
 
         /* BOTÕES GERAIS */
         button { padding: 14px; font-size: 18px; border-radius: 10px; border: none; cursor: pointer; background: #5e5e5e; color: white; transition: transform 0.2s ease, opacity 0.2s; -webkit-tap-highlight-color: transparent; }
         button:hover { transform: scale(1.05); }
-        button:active { transform: scale(0.95); opacity: 0.8; }
         .btn-azul { background: #10a2dd !important; }
 
         /* BOX DA PALAVRA E OPÇÕES */
@@ -29,17 +27,15 @@
         #opcoes-container { display: none; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
         .opcao-btn { width: calc(50% - 5px); background: #d9d9d9; color: #5e5e5e; }
 
-        /* CORES DE RESPOSTA */
         .correta { background: #4CAF50 !important; color: white; }
         .errada { background: #f44336 !important; color: white; }
 
-        /* PLACAR E RESULTADOS */
+        /* PLACAR */
         #contador-container { display: none; gap: 10px; margin-bottom: 20px; }
         #acertos-box, #erros-box { flex: 1; padding: 12px; font-size: 20px; font-weight: bold; color: white; border-radius: 12px; }
         #acertos-box { background: #4CAF50; }
         #erros-box { background: #f44336; }
         #btn-reiniciar { display: none; width: 100%; background: #5e5e5e; margin-top: 15px; }
-        #resultados-lista { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
         h2 { color: #444; margin-bottom: 5px; } 
     </style>
 </head>
@@ -63,7 +59,6 @@
         <div id="menu-hub" class="menu" style="display:none">
             <h2>Menu</h2>
             <button class="btn-azul" onclick="irParaTemas()">Praticar</button>
-            <button class="btn-azul" onclick="console.log('Revisão em breve')">Revisão de erros</button>
             <button onclick="window.location.reload()">Sair</button>
         </div>
 
@@ -76,9 +71,9 @@
         <div id="menu-principal" class="menu" style="display:none">
             <h2>Como deseja praticar?</h2>
             <p id="status-load" style="display:none">Carregando...</p>
-            <button id="btn-intervalos" onclick="abrirMenuIntervalos()" class="btn-azul">Escolher palavras</button>
-            <button id="btn-niveis" onclick="abrirMenuNiveis()" class="btn-azul">Praticar por níveis</button>
-            <button onclick="voltarParaDicionarios()" style="background:#5e5e5e;">Voltar</button>
+            <button onclick="abrirMenuIntervalos()" class="btn-azul">Escolher palavras</button>
+            <button onclick="abrirMenuNiveis()" class="btn-azul">Praticar por níveis</button>
+            <button onclick="voltarParaDicionarios()">Voltar</button>
         </div>
 
         <div id="menu-niveis" class="menu" style="display:none">
@@ -86,7 +81,7 @@
             <button onclick="iniciarNivel(50)" style="background: #5abb6a;">Intermediário</button>
             <button onclick="iniciarNivel(75)" style="background: #f99c35;">Avançado</button>
             <button onclick="iniciarNivel(vocabulario.length)" style="background: #f14738;">Pro</button>
-            <button onclick="voltarAoMenuPraticar()" style="background:#5e5e5e;">Voltar</button>
+            <button onclick="voltarAoMenuPraticar()">Voltar</button>
         </div>
 
         <div id="menu-intervalos" class="menu" style="display:none">
@@ -94,7 +89,7 @@
             <button onclick="iniciarIntervalo(25,50)" style="background: #5abb6a;">26 ⮕ 50 palavras</button>
             <button onclick="iniciarIntervalo(50,75)" style="background: #f99c35;">51 ⮕ 75 palavras</button>
             <button onclick="iniciarIntervalo(75,100)" style="background: #f14738;">76 ⮕ 100 palavras</button>
-            <button onclick="voltarAoMenuPraticar()" style="background:#5e5e5e;">Voltar</button>
+            <button onclick="voltarAoMenuPraticar()">Voltar</button>
         </div>
 
         <div id="palavra-box"></div>
@@ -103,7 +98,6 @@
             <div id="acertos-box">0</div>
             <div id="erros-box">0</div>
         </div>
-        <div id="resultados-lista"></div>
         <button id="btn-reiniciar" onclick="window.location.reload()">Jogar Novamente</button>
     </div>
 
