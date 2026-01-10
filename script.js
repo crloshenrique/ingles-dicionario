@@ -16,19 +16,17 @@ const areaRevisao = document.getElementById("area-revisao");
 const corpoTabela = document.getElementById("corpo-tabela");
 const listaTemasBotoes = document.getElementById("lista-temas-botoes");
 
-menuUsuarios.insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem; margin-top:20px;">Version 0.65</p>');
+menuUsuarios.insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem; margin-top:20px;">Version 0.82</p>');
 
 const meusDicionarios = ["verbos"]; 
 let vocabulario = []; 
 let palavrasParaOJogo = [];
-let palavraAtualObjeto = null;
 let acertos = 0;
 let erros = 0;
-let usuarioAtual = localStorage.getItem("ultimo_usuario") || ""; // Recupera o último usuário
+let usuarioAtual = localStorage.getItem("ultimo_usuario") || "";
 
 window.onload = () => {
     gerarMenuTemas();
-    // Se já existia um usuário logado antes do refresh, pula a tela de login
     if (usuarioAtual) {
         menuUsuarios.style.display = "none";
         menuHub.style.display = "flex";
@@ -41,36 +39,28 @@ window.onload = () => {
 
 function selecionarUsuario(nome) {
     usuarioAtual = nome;
-    localStorage.setItem("ultimo_usuario", nome); // Salva para não perder no refresh
+    localStorage.setItem("ultimo_usuario", nome);
     menuUsuarios.style.display = "none";
     menuHub.style.display = "flex";
 }
 
+function sair() { localStorage.removeItem("ultimo_usuario"); window.location.reload(); }
 function irParaTemas() { menuHub.style.display = "none"; menuTemas.style.display = "flex"; }
 function voltarParaHub() { menuTemas.style.display = "none"; menuHub.style.display = "flex"; }
 function voltarAoMenuPraticar() { menuNiveis.style.display = "none"; menuIntervalos.style.display = "none"; menuPrincipal.style.display = "flex"; }
 function voltarParaDicionarios() { menuPrincipal.style.display = "none"; menuTemas.style.display = "flex"; }
 
-function sair() {
-    localStorage.removeItem("ultimo_usuario");
-    window.location.reload();
-}
-
 // ==========================================
-// REVISÃO (CORRIGIDA)
+// REVISÃO (ESTRATÉGIA DE EXTRAÇÃO)
 // ==========================================
 
 function registrarErro(objeto) {
     if (!usuarioAtual) return;
     const chave = `erros_${usuarioAtual}`;
     let lista = JSON.parse(localStorage.getItem(chave)) || [];
-    
-    // Verifica se a palavra já está na lista para não repetir
-    const jaExiste = lista.some(item => item.exibir === objeto.exibir);
-    if (!jaExiste) {
+    if (!lista.some(item => item.exibir === objeto.exibir)) {
         lista.push(objeto);
         localStorage.setItem(chave, JSON.stringify(lista));
-        console.log("Erro registrado para:", usuarioAtual, objeto.exibir);
     }
 }
 
@@ -91,18 +81,32 @@ function renderizarTabela() {
     const lista = JSON.parse(localStorage.getItem(chave)) || [];
 
     if (lista.length === 0) {
-        corpoTabela.innerHTML = "<tr><td colspan='4' style='text-align:center'>Nenhum erro registrado.</td></tr>";
+        corpoTabela.innerHTML = "<tr><td colspan='4' style='padding:20px'>Lista vazia</td></tr>";
         return;
     }
 
     lista.forEach((item, index) => {
+        let palavraLimpa = item.exibir;
+        let pronuncia = "";
+        
+        // Extrai o conteúdo dentro dos parênteses
+        if (palavraLimpa.includes("(")) {
+            const regex = /(.*)\((.*)\)/;
+            const matches = palavraLimpa.match(regex);
+            if (matches) {
+                palavraLimpa = matches[1].trim();
+                pronuncia = matches[2].trim();
+            }
+        }
+
         const tr = document.createElement("tr");
-        const significadoFormatado = item.correta.replace(/\//g, ", ");
+        const significados = item.correta.replace(/\//g, ", ").toLowerCase();
+
         tr.innerHTML = `
-            <td class="col-palavra">${item.exibir.toUpperCase()}</td>
-            <td class="col-pronuncia">/pronúncia/</td>
-            <td class="col-significado">${significadoFormatado.toLowerCase()}</td>
-            <td><button class="btn-remover" onclick="removerErro(${index})">X</button></td>
+            <td class="col-palavra">${palavraLimpa}</td>
+            <td class="col-pronuncia">${pronuncia.toLowerCase()}</td>
+            <td class="col-significado">${significados}</td>
+            <td class="col-acao"><button class="btn-remover" onclick="removerErro(${index})">X</button></td>
         `;
         corpoTabela.appendChild(tr);
     });
@@ -117,19 +121,8 @@ function removerErro(index) {
 }
 
 // ==========================================
-// JOGO
+// CORE JOGO
 // ==========================================
-
-function gerarMenuTemas() {
-    listaTemasBotoes.innerHTML = "";
-    meusDicionarios.forEach(tema => {
-        const btn = document.createElement("button");
-        btn.textContent = tema.charAt(0).toUpperCase() + tema.slice(1);
-        btn.className = "btn-azul"; 
-        btn.onclick = () => carregarVocabulario(tema);
-        listaTemasBotoes.appendChild(btn);
-    });
-}
 
 function carregarVocabulario(arquivo) {
     document.getElementById("status-load").style.display = "block";
@@ -145,6 +138,17 @@ function carregarVocabulario(arquivo) {
             menuPrincipal.style.display = "flex";
             document.getElementById("status-load").style.display = "none";
         });
+}
+
+function gerarMenuTemas() {
+    listaTemasBotoes.innerHTML = "";
+    meusDicionarios.forEach(tema => {
+        const btn = document.createElement("button");
+        btn.textContent = tema.charAt(0).toUpperCase() + tema.slice(1);
+        btn.className = "btn-azul"; 
+        btn.onclick = () => carregarVocabulario(tema);
+        listaTemasBotoes.appendChild(btn);
+    });
 }
 
 function abrirMenuNiveis() { menuPrincipal.style.display = "none"; menuNiveis.style.display = "flex"; }
@@ -166,18 +170,16 @@ function iniciarJogo() {
 
 function proximaRodada() {
     if (palavrasParaOJogo.length === 0) { finalizarTeste(); return; }
-    palavraAtualObjeto = palavrasParaOJogo.shift();
-    palavraBox.textContent = palavraAtualObjeto.exibir;
+    const atual = palavrasParaOJogo.shift();
+    palavraBox.textContent = atual.exibir;
     opcoesContainer.innerHTML = "";
-    criarOpcoes(palavraAtualObjeto);
-}
-
-function criarOpcoes(objetoAtual) {
-    let opcoes = [objetoAtual.correta];
+    
+    let opcoes = [atual.correta];
     while (opcoes.length < 4) {
         const sorteio = vocabulario[Math.floor(Math.random() * vocabulario.length)].correta;
         if (!opcoes.includes(sorteio)) opcoes.push(sorteio);
     }
+    
     opcoes.sort(() => Math.random() - 0.5).forEach(opcao => {
         const btn = document.createElement("button");
         btn.className = "opcao-btn";
@@ -185,14 +187,14 @@ function criarOpcoes(objetoAtual) {
         btn.onclick = () => {
             const todos = document.querySelectorAll(".opcao-btn");
             todos.forEach(b => b.disabled = true);
-            if (opcao === objetoAtual.correta) {
+            if (opcao === atual.correta) {
                 btn.classList.add("correta");
                 acertos++; acertosBox.textContent = acertos;
             } else {
                 btn.classList.add("errada");
                 erros++; errosBox.textContent = erros;
-                registrarErro(objetoAtual); // Chama a gravação
-                todos.forEach(b => { if (b.textContent === objetoAtual.correta) b.classList.add("correta"); });
+                registrarErro(atual);
+                todos.forEach(b => { if (b.textContent === atual.correta) b.classList.add("correta"); });
             }
             setTimeout(proximaRodada, 1400);
         };
