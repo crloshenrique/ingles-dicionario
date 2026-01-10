@@ -1,4 +1,5 @@
 // Test line: Verified compatibility check - 2026-01-10
+const container = document.getElementById("container");
 const palavraBox = document.getElementById("palavra-box");
 const opcoesContainer = document.getElementById("opcoes-container");
 const acertosBox = document.getElementById("acertos-box");
@@ -16,8 +17,6 @@ const areaRevisao = document.getElementById("area-revisao");
 const corpoTabela = document.getElementById("corpo-tabela");
 const listaTemasBotoes = document.getElementById("lista-temas-botoes");
 
-menuUsuarios.insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.8rem; margin-top:20px;">Version 0.67</p>');
-
 const meusDicionarios = ["verbos"]; 
 let vocabulario = []; 
 let palavrasParaOJogo = [];
@@ -26,28 +25,18 @@ let erros = 0;
 let usuarioAtual = ""; 
 
 window.onload = () => {
-    gerarMenuTemas();
     menuUsuarios.style.display = "flex";
     menuHub.style.display = "none";
+    gerarMenuTemas();
 };
-
-// ==========================================
-// NAVEGAÇÃO
-// ==========================================
 
 function selecionarUsuario(nome) {
     usuarioAtual = nome;
-    // Limpa a tabela visualmente antes de entrar no menu do novo usuário
-    corpoTabela.innerHTML = ""; 
     menuUsuarios.style.display = "none";
     menuHub.style.display = "flex";
-    console.log("Usuário ativo:", usuarioAtual);
 }
 
-function sair() {
-    usuarioAtual = "";
-    window.location.reload();
-}
+function sair() { window.location.reload(); }
 
 function irParaTemas() { menuHub.style.display = "none"; menuTemas.style.display = "flex"; }
 function voltarParaHub() { menuTemas.style.display = "none"; menuHub.style.display = "flex"; }
@@ -55,15 +44,13 @@ function voltarAoMenuPraticar() { menuNiveis.style.display = "none"; menuInterva
 function voltarParaDicionarios() { menuPrincipal.style.display = "none"; menuTemas.style.display = "flex"; }
 
 // ==========================================
-// REVISÃO (ESTRATÉGIA DE EXTRAÇÃO)
+// REVISÃO
 // ==========================================
 
 function registrarErro(objeto) {
     if (!usuarioAtual) return;
     const chave = `erros_${usuarioAtual}`;
     let lista = JSON.parse(localStorage.getItem(chave)) || [];
-    
-    // Só adiciona se a palavra (exibir) ainda não estiver na lista desse usuário específico
     if (!lista.some(item => item.exibir === objeto.exibir)) {
         lista.push(objeto);
         localStorage.setItem(chave, JSON.stringify(lista));
@@ -73,62 +60,54 @@ function registrarErro(objeto) {
 function abrirRevisao() {
     menuHub.style.display = "none";
     areaRevisao.style.display = "flex";
+    // Faz o container crescer para a tabela ficar larga
+    container.classList.add("container-largo");
     renderizarTabela();
 }
 
 function fecharRevisao() {
     areaRevisao.style.display = "none";
     menuHub.style.display = "flex";
+    // Volta o container ao tamanho normal
+    container.classList.remove("container-largo");
 }
 
 function renderizarTabela() {
     corpoTabela.innerHTML = "";
-    if (!usuarioAtual) return;
-
     const chave = `erros_${usuarioAtual}`;
     const lista = JSON.parse(localStorage.getItem(chave)) || [];
 
     if (lista.length === 0) {
-        corpoTabela.innerHTML = "<tr><td colspan='4' style='padding:20px'>Nenhum erro salvo para " + usuarioAtual + "</td></tr>";
+        corpoTabela.innerHTML = "<tr><td colspan='3' style='padding:30px'>Lista vazia</td></tr>";
         return;
     }
 
-    lista.forEach((item, index) => {
-        let palavraLimpa = item.exibir;
-        let pronuncia = "";
-        
-        if (palavraLimpa.includes("(")) {
-            const regex = /(.*)\((.*)\)/;
-            const matches = palavraLimpa.match(regex);
-            if (matches) {
-                palavraLimpa = matches[1].trim();
-                pronuncia = matches[2].trim();
-            }
+    lista.forEach((item) => {
+        let p = item.exibir;
+        let pron = "";
+        if (p.includes("(")) {
+            const m = p.match(/(.*)\((.*)\)/);
+            if (m) { p = m[1].trim(); pron = m[2].trim(); }
         }
-
         const tr = document.createElement("tr");
-        const significados = item.correta.replace(/\//g, ", ").toLowerCase();
-
         tr.innerHTML = `
-            <td class="col-palavra">${palavraLimpa}</td>
-            <td class="col-pronuncia">${pronuncia.toLowerCase()}</td>
-            <td class="col-significado">${significados}</td>
-            <td class="col-acao"><button class="btn-remover" onclick="removerErro(${index})">X</button></td>
+            <td class="col-palavra">${p}</td>
+            <td class="col-pronuncia">${pron.toLowerCase()}</td>
+            <td class="col-significado">${item.correta.replace(/\//g, ", ").toLowerCase()}</td>
         `;
         corpoTabela.appendChild(tr);
     });
 }
 
-function removerErro(index) {
-    const chave = `erros_${usuarioAtual}`;
-    let lista = JSON.parse(localStorage.getItem(chave)) || [];
-    lista.splice(index, 1);
-    localStorage.setItem(chave, JSON.stringify(lista));
-    renderizarTabela();
+function limparTudo() {
+    if (confirm("Deseja apagar todos os seus erros salvos?")) {
+        localStorage.removeItem(`erros_${usuarioAtual}`);
+        renderizarTabela();
+    }
 }
 
 // ==========================================
-// CORE DO JOGO
+// JOGO (IGUAL)
 // ==========================================
 
 function carregarVocabulario(arquivo) {
@@ -159,7 +138,7 @@ function gerarMenuTemas() {
 }
 
 function abrirMenuNiveis() { menuPrincipal.style.display = "none"; menuNiveis.style.display = "flex"; }
-function abrirMenuIntervalos() { menuPrincipal.style.display = "none"; menuIntervalos.style.display = "flex"; }
+function abrirMenuIntervalos() { menuPrincipal.style.display = "none"; menuIntervalos.style.display = "none"; menuIntervalos.style.display = "flex"; }
 function iniciarNivel(qtd) { palavrasParaOJogo = vocabulario.slice(0, qtd); iniciarJogo(); }
 function iniciarIntervalo(i, f) { palavrasParaOJogo = vocabulario.slice(i, f); iniciarJogo(); }
 
@@ -180,29 +159,20 @@ function proximaRodada() {
     const atual = palavrasParaOJogo.shift();
     palavraBox.textContent = atual.exibir;
     opcoesContainer.innerHTML = "";
-    
     let opcoes = [atual.correta];
     while (opcoes.length < 4) {
         const sorteio = vocabulario[Math.floor(Math.random() * vocabulario.length)].correta;
         if (!opcoes.includes(sorteio)) opcoes.push(sorteio);
     }
-    
     opcoes.sort(() => Math.random() - 0.5).forEach(opcao => {
         const btn = document.createElement("button");
-        btn.className = "opcao-btn";
-        btn.textContent = opcao;
+        btn.className = "opcao-btn"; btn.textContent = opcao;
         btn.onclick = () => {
             const todos = document.querySelectorAll(".opcao-btn");
             todos.forEach(b => b.disabled = true);
-            if (opcao === atual.correta) {
-                btn.classList.add("correta");
-                acertos++; acertosBox.textContent = acertos;
-            } else {
-                btn.classList.add("errada");
-                erros++; errosBox.textContent = erros;
-                registrarErro(atual);
-                todos.forEach(b => { if (b.textContent === atual.correta) b.classList.add("correta"); });
-            }
+            if (opcao === atual.correta) { btn.classList.add("correta"); acertos++; acertosBox.textContent = acertos; }
+            else { btn.classList.add("errada"); erros++; errosBox.textContent = erros; registrarErro(atual); 
+                   todos.forEach(b => { if (b.textContent === atual.correta) b.classList.add("correta"); }); }
             setTimeout(proximaRodada, 1400);
         };
         opcoesContainer.appendChild(btn);
@@ -210,7 +180,7 @@ function proximaRodada() {
 }
 
 function finalizarTeste() {
-    palavraBox.textContent = "Teste finalizado!";
+    palavraBox.textContent = "Fim!";
     opcoesContainer.style.display = "none";
     btnReiniciar.style.display = "block";
 }
