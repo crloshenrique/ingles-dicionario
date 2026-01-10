@@ -10,10 +10,26 @@
         #container { width: 100%; max-width: 400px; text-align: center; position: relative; }
         .menu { display: flex; flex-direction: column; gap: 12px; width: 100%; }
 
-        /* SELEÇÃO DE USUÁRIO - ESTILO AMPLIADO COM BORDA */
+        /* SELEÇÃO DE USUÁRIO - COM ANIMAÇÃO HOVER */
         .usuarios-flex { display: flex; justify-content: center; gap: 30px; margin-top: 30px; }
-        .usuario-card { cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: transform 0.2s; -webkit-tap-highlight-color: transparent; width: 140px; }
+        
+        .usuario-card { 
+            cursor: pointer; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            transition: transform 0.3s ease; /* Transição suave para a animação */
+            -webkit-tap-highlight-color: transparent; 
+            width: 140px; 
+        }
+
+        /* ANIMAÇÃO: Aumenta o card inteiro (imagem + nome) ao passar o mouse */
+        .usuario-card:hover { 
+            transform: scale(1.1); 
+        }
+
         .usuario-card:active { transform: scale(0.95); }
+
         .usuario-card img {
             width: 110px;  
             height: 110px;
