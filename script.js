@@ -1,4 +1,3 @@
-// Test line: Verified compatibility check - 2026-01-09
 const palavraBox = document.getElementById("palavra-box");
 const opcoesContainer = document.getElementById("opcoes-container");
 const acertosBox = document.getElementById("acertos-box");
@@ -8,6 +7,7 @@ const resultadosLista = document.getElementById("resultados-lista");
 const btnReiniciar = document.getElementById("btn-reiniciar");
 
 const menuUsuarios = document.getElementById("menu-usuarios");
+const menuHub = document.getElementById("menu-hub");
 const menuTemas = document.getElementById("menu-temas");
 const menuPrincipal = document.getElementById("menu-principal");
 const menuNiveis = document.getElementById("menu-niveis");
@@ -15,13 +15,9 @@ const menuIntervalos = document.getElementById("menu-intervalos");
 const listaTemasBotoes = document.getElementById("lista-temas-botoes");
 
 // Teste de atualização solicitado:
-menuTemas.insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem;">Version 0.60</p>');
+menu-usuarios.insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem;">Version 0.61</p>');
 
-// ==========================================
-// CONFIGURAÇÃO DE DICIONÁRIOS
-// ==========================================
 const meusDicionarios = ["verbos"]; 
-
 let vocabulario = []; 
 let palavrasParaOJogo = [];
 let palavraAtualObjeto = null;
@@ -31,13 +27,24 @@ let historicoResultados = [];
 
 window.onload = gerarMenuTemas;
 
-// NOVO: FUNÇÃO PARA SELECIONAR USUÁRIO
+// NAVEGAÇÃO ENTRE OS NOVOS MENUS
 function selecionarUsuario(nome) {
-    console.log("Jogador atual:", nome);
+    console.log("Usuário logado:", nome);
     menuUsuarios.style.display = "none";
+    menuHub.style.display = "flex";
+}
+
+function irParaTemas() {
+    menuHub.style.display = "none";
     menuTemas.style.display = "flex";
 }
 
+function voltarParaHub() {
+    menuTemas.style.display = "none";
+    menuHub.style.display = "flex";
+}
+
+// RESTANTE DAS FUNÇÕES ORIGINAIS
 function gerarMenuTemas() {
     listaTemasBotoes.innerHTML = "";
     meusDicionarios.forEach(tema => {
