@@ -10,59 +10,41 @@
         #container { width: 100%; max-width: 400px; text-align: center; position: relative; }
         .menu { display: flex; flex-direction: column; gap: 12px; width: 100%; }
 
-        /* SELEÇÃO DE USUÁRIO - AJUSTADO */
+        /* SELEÇÃO DE USUÁRIO */
         .usuarios-flex { display: flex; justify-content: center; gap: 15px; margin-top: 15px; }
-        .usuario-card { 
-            cursor: pointer; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            transition: transform 0.3s ease; 
-            -webkit-tap-highlight-color: transparent; 
-            width: 130px; 
-        }
+        .usuario-card { cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: transform 0.3s ease; -webkit-tap-highlight-color: transparent; width: 130px; }
         .usuario-card:hover { transform: scale(1.1); }
         .usuario-card:active { transform: scale(0.95); }
-
-        .usuario-card img {
-            width: 110px;  
-            height: 110px;
-            margin-bottom: 12px;
-            background: #d9d9d9; 
-            border-radius: 30px; 
-            padding: 15px;
-            object-fit: contain;
-            box-sizing: border-box;
-        }
+        .usuario-card img { width: 110px; height: 110px; margin-bottom: 12px; background: #d9d9d9; border-radius: 30px; padding: 15px; object-fit: contain; box-sizing: border-box; }
         .usuario-card span { font-size: 1.3rem; font-weight: bold; color: #444; }
 
         /* BOTÕES GERAIS */
-        button { 
-            padding: 14px; 
-            font-size: 18px; 
-            border-radius: 10px; 
-            border: none; 
-            cursor: pointer; 
-            background: #5e5e5e; 
-            color: white; 
-            transition: transform 0.2s ease, opacity 0.2s; 
-            -webkit-tap-highlight-color: transparent; 
-        }
+        button { padding: 14px; font-size: 18px; border-radius: 10px; border: none; cursor: pointer; background: #5e5e5e; color: white; transition: transform 0.2s ease, opacity 0.2s; -webkit-tap-highlight-color: transparent; }
         button:hover { transform: scale(1.05); }
         button:active { transform: scale(0.95); opacity: 0.8; }
-
         .btn-azul { background: #10a2dd !important; }
 
-        /* BOX DA PALAVRA E OPÇÕES */
+        /* TABELA DE REVISÃO */
+        #area-revisao { display: none; width: 100%; margin-top: 10px; }
+        .tabela-container { width: 100%; overflow-x: auto; background: rgba(0, 0, 0, 0.05); border-radius: 15px; margin-bottom: 15px; }
+        .tabela-erros { width: 100%; border-collapse: collapse; }
+        .tabela-erros th { background: #5e5e5e; color: white; padding: 12px 8px; font-size: 0.85rem; text-align: left; }
+        .tabela-erros td { padding: 12px 8px; border-bottom: 1px solid rgba(0,0,0,0.08); font-size: 0.85rem; color: #333; text-align: left; }
+        
+        .col-palavra { text-transform: uppercase; font-weight: bold; }
+        .col-pronuncia { text-transform: lowercase; color: #666; font-style: italic; }
+        .col-significado { text-transform: lowercase; }
+
+        .btn-remover { color: #f44336; font-size: 1.2rem; font-weight: bold; background: none; border: none; cursor: pointer; padding: 0 5px; }
+
+        /* ÁREA DE JOGO */
         #palavra-box { background: #5e5e5e; color: white; font-size: 1.8rem; font-weight: bold; height: 125px; border-radius: 15px; display: none; align-items: center; justify-content: center; margin-bottom: 20px; padding: 10px; }
         #opcoes-container { display: none; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
         .opcao-btn { width: calc(50% - 5px); background: #d9d9d9; color: #5e5e5e; }
-
-        /* CORES DE RESPOSTA */
         .correta { background: #4CAF50 !important; color: white; }
         .errada { background: #f44336 !important; color: white; }
 
-        /* PLACAR E RESULTADOS */
+        /* PLACAR */
         #contador-container { display: none; gap: 10px; margin-bottom: 20px; }
         #acertos-box, #erros-box { flex: 1; padding: 12px; font-size: 20px; font-weight: bold; color: white; border-radius: 12px; }
         #acertos-box { background: #4CAF50; }
@@ -93,8 +75,26 @@
         <div id="menu-hub" class="menu" style="display:none">
             <h2>Menu</h2>
             <button class="btn-azul" onclick="irParaTemas()">Praticar</button>
-            <button class="btn-azul" onclick="console.log('Revisão em breve')">Revisão de erros</button>
+            <button class="btn-azul" onclick="abrirRevisao()">Revisão de erros</button>
             <button onclick="window.location.reload()">Sair</button>
+        </div>
+
+        <div id="area-revisao" class="menu">
+            <h2>Minha Revisão</h2>
+            <div class="tabela-container">
+                <table class="tabela-erros">
+                    <thead>
+                        <tr>
+                            <th>Palavra</th>
+                            <th>Pronúncia</th>
+                            <th>Significado</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="corpo-tabela"></tbody>
+                </table>
+            </div>
+            <button onclick="fecharRevisao()">Voltar</button>
         </div>
 
         <div id="menu-temas" class="menu" style="display:none">
