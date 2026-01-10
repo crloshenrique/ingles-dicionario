@@ -10,24 +10,18 @@
         #container { width: 100%; max-width: 400px; text-align: center; position: relative; }
         .menu { display: flex; flex-direction: column; gap: 12px; width: 100%; }
 
-        /* SELEÇÃO DE USUÁRIO - COM ANIMAÇÃO HOVER */
+        /* SELEÇÃO DE USUÁRIO - COM ANIMAÇÃO */
         .usuarios-flex { display: flex; justify-content: center; gap: 30px; margin-top: 30px; }
-        
         .usuario-card { 
             cursor: pointer; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            transition: transform 0.3s ease; /* Transição suave para a animação */
+            transition: transform 0.3s ease; 
             -webkit-tap-highlight-color: transparent; 
             width: 140px; 
         }
-
-        /* ANIMAÇÃO: Aumenta o card inteiro (imagem + nome) ao passar o mouse */
-        .usuario-card:hover { 
-            transform: scale(1.1); 
-        }
-
+        .usuario-card:hover { transform: scale(1.1); }
         .usuario-card:active { transform: scale(0.95); }
 
         .usuario-card img {
@@ -42,9 +36,29 @@
         }
         .usuario-card span { font-size: 1.3rem; font-weight: bold; color: #444; }
 
-        /* BOTÕES */
-        button { padding: 14px; font-size: 18px; border-radius: 10px; border: none; cursor: pointer; background: #5e5e5e; color: white; transition: opacity 0.2s; -webkit-tap-highlight-color: transparent; }
-        button:active { opacity: 0.8; }
+        /* BOTÕES GERAIS - ANIMAÇÃO APLICADA AQUI */
+        button { 
+            padding: 14px; 
+            font-size: 18px; 
+            border-radius: 10px; 
+            border: none; 
+            cursor: pointer; 
+            background: #5e5e5e; 
+            color: white; 
+            transition: transform 0.2s ease, opacity 0.2s; /* Adicionado transform aqui */
+            -webkit-tap-highlight-color: transparent; 
+        }
+        
+        /* Efeito de crescer em todos os botões do site ao passar o mouse */
+        button:hover { 
+            transform: scale(1.05); 
+        }
+
+        button:active { 
+            transform: scale(0.95); 
+            opacity: 0.8; 
+        }
+
         .btn-azul { background: #10a2dd !important; }
 
         /* BOX DA PALAVRA E OPÇÕES */
@@ -71,7 +85,7 @@
     <div id="container">
 
         <div id="menu-usuarios" class="menu">
-            <h2>Escolher usuário:</h2>
+            <h2>Quem está jogando?</h2>
             <div class="usuarios-flex">
                 <div class="usuario-card" onclick="selecionarUsuario('CH')">
                     <img src="imagens/user.png" alt="User">
