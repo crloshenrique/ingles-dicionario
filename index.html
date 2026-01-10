@@ -6,7 +6,7 @@
     <link rel="icon" type="image/png" href="imagens/icone.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* ESTILOS GERAIS */
+        /* ESTILOS GERAIS - MANTIDOS */
         body { font-family: Arial, sans-serif; background: #f0f0f0; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 15px; box-sizing: border-box; }
         #container { width: 100%; max-width: 400px; text-align: center; position: relative; }
         .menu { display: flex; flex-direction: column; gap: 12px; width: 100%; }
@@ -38,6 +38,24 @@
         #erros-box { background: #f44336; }
         #btn-reiniciar { display: none; width: 100%; background: #5e5e5e; margin-top: 15px; }
         h2 { color: #444; margin-bottom: 5px; } 
+
+        /* ADICIONADO: Estilo para a lista de resultados final */
+        #resultados-lista { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 8px; 
+            margin-top: 15px; 
+            max-height: 300px; 
+            overflow-y: auto; 
+        }
+        .item-historico {
+            padding: 10px;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -95,11 +113,15 @@
 
         <div id="palavra-box"></div>
         <div id="opcoes-container"></div>
+        
         <div id="contador-container">
             <div id="acertos-box">0</div>
             <div id="erros-box">0</div>
         </div>
-        <button id="btn-reiniciar" onclick="window.location.reload()">Jogar Novamente</button>
+
+        <div id="resultados-lista"></div>
+
+        <button id="id-botao-reiniciar-fake" style="display:none"></button> <button id="btn-reiniciar" onclick="window.location.reload()">Jogar Novamente</button>
     </div>
 
     <script src="script.js"></script>
