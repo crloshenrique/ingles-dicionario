@@ -24,10 +24,10 @@
         button:active { transform: scale(0.95); opacity: 0.8; }
         .btn-azul { background: #10a2dd !important; }
 
-        /* TABELA DE REVISÃO CORRIGIDA */
+        /* TABELA DE REVISÃO QUADRADA */
         #area-revisao { display: none; width: 100%; margin-top: 10px; }
         .tabela-container { width: 100%; background: rgba(0, 0, 0, 0.05); border: 1px solid #ccc; margin-bottom: 15px; }
-        .tabela-erros { width: 100%; border-collapse: collapse; table-layout: fixed; } /* Layout fixo */
+        .tabela-erros { width: 100%; border-collapse: collapse; table-layout: fixed; }
         
         .tabela-erros th, .tabela-erros td { 
             padding: 12px 5px; 
@@ -36,14 +36,15 @@
             overflow: hidden; 
             text-overflow: ellipsis;
             font-family: Arial, sans-serif;
+            font-size: 0.85rem;
         }
 
-        .tabela-erros th { background: #5e5e5e; color: white; font-size: 0.8rem; text-transform: uppercase; }
+        .tabela-erros th { background: #5e5e5e; color: white; text-transform: uppercase; font-size: 0.75rem; }
         
-        /* Tamanhos Fixos das Colunas */
+        /* Colunas com tamanhos fixos */
         .col-palavra { width: 25%; font-weight: bold; color: #333; }
         .col-pronuncia { width: 20%; color: #10a2dd; font-style: italic; }
-        .col-significado { width: 40%; } /* A maior coluna */
+        .col-significado { width: 40%; }
         .col-acao { width: 15%; }
 
         .btn-remover { color: #f44336; font-size: 1.2rem; font-weight: bold; background: none; border: none; cursor: pointer; width: 100%; }
@@ -89,7 +90,7 @@
             <button onclick="sair()">Sair</button>
         </div>
 
-        <div id="area-revisao" class="menu">
+        <div id="area-revisao" class="menu" style="display:none">
             <h2>Minha Revisão</h2>
             <div class="tabela-container">
                 <table class="tabela-erros">
