@@ -16,21 +16,20 @@ const areaRevisao = document.getElementById("area-revisao");
 const corpoTabela = document.getElementById("corpo-tabela");
 const listaTemasBotoes = document.getElementById("lista-temas-botoes");
 
-menuUsuarios.insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem; margin-top:20px;">Version 0.82</p>');
+menuUsuarios.insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.8rem; margin-top:20px;">Version 0.85</p>');
 
 const meusDicionarios = ["verbos"]; 
 let vocabulario = []; 
 let palavrasParaOJogo = [];
 let acertos = 0;
 let erros = 0;
-let usuarioAtual = localStorage.getItem("ultimo_usuario") || "";
+let usuarioAtual = ""; // Resetado ao carregar a página
 
 window.onload = () => {
     gerarMenuTemas();
-    if (usuarioAtual) {
-        menuUsuarios.style.display = "none";
-        menuHub.style.display = "flex";
-    }
+    // Sempre exibe o login ao carregar a página
+    menuUsuarios.style.display = "flex";
+    menuHub.style.display = "none";
 };
 
 // ==========================================
@@ -39,12 +38,15 @@ window.onload = () => {
 
 function selecionarUsuario(nome) {
     usuarioAtual = nome;
-    localStorage.setItem("ultimo_usuario", nome);
     menuUsuarios.style.display = "none";
     menuHub.style.display = "flex";
 }
 
-function sair() { localStorage.removeItem("ultimo_usuario"); window.location.reload(); }
+function sair() {
+    usuarioAtual = "";
+    window.location.reload();
+}
+
 function irParaTemas() { menuHub.style.display = "none"; menuTemas.style.display = "flex"; }
 function voltarParaHub() { menuTemas.style.display = "none"; menuHub.style.display = "flex"; }
 function voltarAoMenuPraticar() { menuNiveis.style.display = "none"; menuIntervalos.style.display = "none"; menuPrincipal.style.display = "flex"; }
@@ -89,7 +91,7 @@ function renderizarTabela() {
         let palavraLimpa = item.exibir;
         let pronuncia = "";
         
-        // Extrai o conteúdo dentro dos parênteses
+        // Separa palavra da pronúncia (conteúdo entre parênteses)
         if (palavraLimpa.includes("(")) {
             const regex = /(.*)\((.*)\)/;
             const matches = palavraLimpa.match(regex);
@@ -121,7 +123,7 @@ function removerErro(index) {
 }
 
 // ==========================================
-// CORE JOGO
+// CORE DO JOGO
 // ==========================================
 
 function carregarVocabulario(arquivo) {
@@ -207,4 +209,5 @@ function finalizarTeste() {
     opcoesContainer.style.display = "none";
     btnReiniciar.style.display = "block";
 }
+
 // Test line: Git 25 update confirmed.
