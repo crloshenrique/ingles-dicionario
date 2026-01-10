@@ -16,18 +16,17 @@ const areaRevisao = document.getElementById("area-revisao");
 const corpoTabela = document.getElementById("corpo-tabela");
 const listaTemasBotoes = document.getElementById("lista-temas-botoes");
 
-menuUsuarios.insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.8rem; margin-top:20px;">Version 0.85</p>');
+menuUsuarios.insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.8rem; margin-top:20px;">Version 0.67</p>');
 
 const meusDicionarios = ["verbos"]; 
 let vocabulario = []; 
 let palavrasParaOJogo = [];
 let acertos = 0;
 let erros = 0;
-let usuarioAtual = ""; // Resetado ao carregar a página
+let usuarioAtual = ""; 
 
 window.onload = () => {
     gerarMenuTemas();
-    // Sempre exibe o login ao carregar a página
     menuUsuarios.style.display = "flex";
     menuHub.style.display = "none";
 };
@@ -38,8 +37,11 @@ window.onload = () => {
 
 function selecionarUsuario(nome) {
     usuarioAtual = nome;
+    // Limpa a tabela visualmente antes de entrar no menu do novo usuário
+    corpoTabela.innerHTML = ""; 
     menuUsuarios.style.display = "none";
     menuHub.style.display = "flex";
+    console.log("Usuário ativo:", usuarioAtual);
 }
 
 function sair() {
@@ -60,6 +62,8 @@ function registrarErro(objeto) {
     if (!usuarioAtual) return;
     const chave = `erros_${usuarioAtual}`;
     let lista = JSON.parse(localStorage.getItem(chave)) || [];
+    
+    // Só adiciona se a palavra (exibir) ainda não estiver na lista desse usuário específico
     if (!lista.some(item => item.exibir === objeto.exibir)) {
         lista.push(objeto);
         localStorage.setItem(chave, JSON.stringify(lista));
@@ -79,11 +83,13 @@ function fecharRevisao() {
 
 function renderizarTabela() {
     corpoTabela.innerHTML = "";
+    if (!usuarioAtual) return;
+
     const chave = `erros_${usuarioAtual}`;
     const lista = JSON.parse(localStorage.getItem(chave)) || [];
 
     if (lista.length === 0) {
-        corpoTabela.innerHTML = "<tr><td colspan='4' style='padding:20px'>Lista vazia</td></tr>";
+        corpoTabela.innerHTML = "<tr><td colspan='4' style='padding:20px'>Nenhum erro salvo para " + usuarioAtual + "</td></tr>";
         return;
     }
 
@@ -91,7 +97,6 @@ function renderizarTabela() {
         let palavraLimpa = item.exibir;
         let pronuncia = "";
         
-        // Separa palavra da pronúncia (conteúdo entre parênteses)
         if (palavraLimpa.includes("(")) {
             const regex = /(.*)\((.*)\)/;
             const matches = palavraLimpa.match(regex);
