@@ -1,3 +1,4 @@
+// Test line: Verified compatibility check - 2026-01-09
 const palavraBox = document.getElementById("palavra-box");
 const opcoesContainer = document.getElementById("opcoes-container");
 const acertosBox = document.getElementById("acertos-box");
@@ -14,8 +15,8 @@ const menuNiveis = document.getElementById("menu-niveis");
 const menuIntervalos = document.getElementById("menu-intervalos");
 const listaTemasBotoes = document.getElementById("lista-temas-botoes");
 
-// Teste de atualização solicitado:
-menuUsuarios.insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem;">Version 0.61</p>');
+// Adição da Versão no menu de login
+menuUsuarios.insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem; margin-top:20px;">Version 0.62</p>');
 
 const meusDicionarios = ["verbos"]; 
 let vocabulario = []; 
@@ -27,7 +28,10 @@ let historicoResultados = [];
 
 window.onload = gerarMenuTemas;
 
-// NAVEGAÇÃO ENTRE OS NOVOS MENUS
+// ==========================================
+// FUNÇÕES DE NAVEGAÇÃO (CORRIGIDAS)
+// ==========================================
+
 function selecionarUsuario(nome) {
     console.log("Usuário logado:", nome);
     menuUsuarios.style.display = "none";
@@ -44,13 +48,26 @@ function voltarParaHub() {
     menuHub.style.display = "flex";
 }
 
-// RESTANTE DAS FUNÇÕES ORIGINAIS
+function voltarAoPrincipal() {
+    // Esconde qualquer menu de sub-seleção ou o menu principal de jogo
+    menuNiveis.style.display = "none";
+    menuIntervalos.style.display = "none";
+    menuPrincipal.style.display = "none";
+    
+    // Mostra a escolha de dicionários
+    menuTemas.style.display = "flex";
+}
+
+// ==========================================
+// LÓGICA DO DICIONÁRIO E JOGO
+// ==========================================
+
 function gerarMenuTemas() {
     listaTemasBotoes.innerHTML = "";
     meusDicionarios.forEach(tema => {
         const btn = document.createElement("button");
         btn.textContent = tema.charAt(0).toUpperCase() + tema.slice(1);
-        btn.style.background = "#10a2dd"; 
+        btn.className = "btn-azul"; 
         btn.onclick = () => carregarVocabulario(tema);
         listaTemasBotoes.appendChild(btn);
     });
@@ -78,11 +95,7 @@ function carregarVocabulario(arquivo) {
                 const exibir = esquerda.trim();
                 const traducoes = direita.split("/").map(t => t.trim());
 
-                vocabulario.push({
-                    exibir: exibir,
-                    correta: traducoes[0],
-                    todas: traducoes
-                });
+                vocabulario.push({ exibir: exibir, correta: traducoes[0], todas: traducoes });
             });
 
             menuTemas.style.display = "none";
@@ -103,12 +116,6 @@ function abrirMenuNiveis() {
 function abrirMenuIntervalos() {
     menuPrincipal.style.display = "none";
     menuIntervalos.style.display = "flex";
-}
-
-function voltarAoPrincipal() {
-    menuNiveis.style.display = "none";
-    menuIntervalos.style.display = "none";
-    menuPrincipal.style.display = "flex";
 }
 
 function iniciarNivel(quantidade) {
@@ -175,10 +182,7 @@ function criarOpcoes(objetoAtual) {
             const todos = document.querySelectorAll(".opcao-btn");
             todos.forEach(b => b.disabled = true);
 
-            let itemHistorico = {
-                texto: `${objetoAtual.exibir} = ${correta}`,
-                cor: ""
-            };
+            let itemHistorico = { texto: `${objetoAtual.exibir} = ${correta}`, cor: "" };
 
             if (opcao === correta) {
                 btn.classList.add("correta");
@@ -192,7 +196,6 @@ function criarOpcoes(objetoAtual) {
                 itemHistorico.cor = "#f44336";
                 todos.forEach(b => { if (b.textContent === correta) b.classList.add("correta"); });
             }
-
             historicoResultados.push(itemHistorico);
             setTimeout(proximaRodada, 1400);
         };
