@@ -7,6 +7,7 @@ const contadorContainer = document.getElementById("contador-container");
 const resultadosLista = document.getElementById("resultados-lista");
 const btnReiniciar = document.getElementById("btn-reiniciar");
 
+const menuUsuarios = document.getElementById("menu-usuarios");
 const menuTemas = document.getElementById("menu-temas");
 const menuPrincipal = document.getElementById("menu-principal");
 const menuNiveis = document.getElementById("menu-niveis");
@@ -14,7 +15,7 @@ const menuIntervalos = document.getElementById("menu-intervalos");
 const listaTemasBotoes = document.getElementById("lista-temas-botoes");
 
 // Teste de atualização solicitado:
-document.getElementById("menu-temas").insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem;">Version 0.58</p>');
+menuTemas.insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem;">Version 0.59</p>');
 
 // ==========================================
 // CONFIGURAÇÃO DE DICIONÁRIOS
@@ -30,11 +31,18 @@ let historicoResultados = [];
 
 window.onload = gerarMenuTemas;
 
+// NOVO: FUNÇÃO PARA SELECIONAR USUÁRIO
+function selecionarUsuario(nome) {
+    console.log("Jogador atual:", nome);
+    menuUsuarios.style.display = "none";
+    menuTemas.style.display = "flex";
+}
+
 function gerarMenuTemas() {
     listaTemasBotoes.innerHTML = "";
     meusDicionarios.forEach(tema => {
         const btn = document.createElement("button");
-        btn.textContent = tema.charAt(0).toUpperCase() + tema.slice(1); // Exibe bonito, mas carrega minúsculo
+        btn.textContent = tema.charAt(0).toUpperCase() + tema.slice(1);
         btn.style.background = "#10a2dd"; 
         btn.onclick = () => carregarVocabulario(tema);
         listaTemasBotoes.appendChild(btn);
@@ -48,14 +56,12 @@ function carregarVocabulario(arquivo) {
     
     vocabulario = []; 
 
-    // Caminho corrigido para pasta sem acento e minúscula
     fetch(`dicionarios/${arquivo}.txt`)
         .then(res => {
             if(!res.ok) throw new Error("Arquivo não encontrado");
             return res.text();
         })
         .then(texto => {
-            // RegEx corrigido para aceitar quebras de linha Windows e Unix
             const linhas = texto.split(/\r?\n/)
                                 .map(l => l.trim())
                                 .filter(l => l !== "" && l.includes("="));
@@ -198,3 +204,5 @@ function finalizarTeste() {
     });
     btnReiniciar.style.display = "block";
 }
+
+// Test line: Git 25 update confirmed.
