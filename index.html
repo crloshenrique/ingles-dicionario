@@ -7,7 +7,7 @@
     <style>
         /* ESTILOS GERAIS */
         body { font-family: Arial, sans-serif; background: #f0f0f0; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 15px; box-sizing: border-box; }
-        #container { width: 100%; max-width: 400px; text-align: center; position: relative; }
+        #container { width: 100%; max-width: 420px; text-align: center; position: relative; }
         .menu { display: flex; flex-direction: column; gap: 12px; width: 100%; }
 
         /* SELEÇÃO DE USUÁRIO */
@@ -19,23 +19,34 @@
         .usuario-card span { font-size: 1.3rem; font-weight: bold; color: #444; }
 
         /* BOTÕES GERAIS */
-        button { padding: 14px; font-size: 18px; border-radius: 10px; border: none; cursor: pointer; background: #5e5e5e; color: white; transition: transform 0.2s ease, opacity 0.2s; -webkit-tap-highlight-color: transparent; }
+        button { padding: 14px; font-size: 18px; border-radius: 10px; border: none; cursor: pointer; background: #5e5e5e; color: white; transition: transform 0.2s ease, opacity 0.2s; -webkit-tap-highlight-color: transparent; font-family: Arial, sans-serif; }
         button:hover { transform: scale(1.05); }
         button:active { transform: scale(0.95); opacity: 0.8; }
         .btn-azul { background: #10a2dd !important; }
 
-        /* TABELA DE REVISÃO */
+        /* TABELA DE REVISÃO CORRIGIDA */
         #area-revisao { display: none; width: 100%; margin-top: 10px; }
-        .tabela-container { width: 100%; overflow-x: auto; background: rgba(0, 0, 0, 0.05); border-radius: 15px; margin-bottom: 15px; }
-        .tabela-erros { width: 100%; border-collapse: collapse; }
-        .tabela-erros th { background: #5e5e5e; color: white; padding: 12px 8px; font-size: 0.85rem; text-align: left; }
-        .tabela-erros td { padding: 12px 8px; border-bottom: 1px solid rgba(0,0,0,0.08); font-size: 0.85rem; color: #333; text-align: left; }
+        .tabela-container { width: 100%; background: rgba(0, 0, 0, 0.05); border: 1px solid #ccc; margin-bottom: 15px; }
+        .tabela-erros { width: 100%; border-collapse: collapse; table-layout: fixed; } /* Layout fixo */
         
-        .col-palavra { text-transform: uppercase; font-weight: bold; }
-        .col-pronuncia { text-transform: lowercase; color: #666; font-style: italic; }
-        .col-significado { text-transform: lowercase; }
+        .tabela-erros th, .tabela-erros td { 
+            padding: 12px 5px; 
+            border: 1px solid rgba(0,0,0,0.1); 
+            text-align: center; 
+            overflow: hidden; 
+            text-overflow: ellipsis;
+            font-family: Arial, sans-serif;
+        }
 
-        .btn-remover { color: #f44336; font-size: 1.2rem; font-weight: bold; background: none; border: none; cursor: pointer; padding: 0 5px; }
+        .tabela-erros th { background: #5e5e5e; color: white; font-size: 0.8rem; text-transform: uppercase; }
+        
+        /* Tamanhos Fixos das Colunas */
+        .col-palavra { width: 25%; font-weight: bold; color: #333; }
+        .col-pronuncia { width: 20%; color: #10a2dd; font-style: italic; }
+        .col-significado { width: 40%; } /* A maior coluna */
+        .col-acao { width: 15%; }
+
+        .btn-remover { color: #f44336; font-size: 1.2rem; font-weight: bold; background: none; border: none; cursor: pointer; width: 100%; }
 
         /* ÁREA DE JOGO */
         #palavra-box { background: #5e5e5e; color: white; font-size: 1.8rem; font-weight: bold; height: 125px; border-radius: 15px; display: none; align-items: center; justify-content: center; margin-bottom: 20px; padding: 10px; }
@@ -50,7 +61,6 @@
         #acertos-box { background: #4CAF50; }
         #erros-box { background: #f44336; }
         #btn-reiniciar { display: none; width: 100%; background: #5e5e5e; margin-top: 15px; }
-        #resultados-lista { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
         h2 { color: #444; margin-bottom: 5px; } 
     </style>
 </head>
@@ -76,7 +86,7 @@
             <h2>Menu</h2>
             <button class="btn-azul" onclick="irParaTemas()">Praticar</button>
             <button class="btn-azul" onclick="abrirRevisao()">Revisão de erros</button>
-            <button onclick="window.location.reload()">Sair</button>
+            <button onclick="sair()">Sair</button>
         </div>
 
         <div id="area-revisao" class="menu">
@@ -85,10 +95,10 @@
                 <table class="tabela-erros">
                     <thead>
                         <tr>
-                            <th>Palavra</th>
-                            <th>Pronúncia</th>
-                            <th>Significado</th>
-                            <th></th>
+                            <th style="width: 25%;">Palavra</th>
+                            <th style="width: 20%;">Pron.</th>
+                            <th style="width: 40%;">Significado</th>
+                            <th style="width: 15%;"></th>
                         </tr>
                     </thead>
                     <tbody id="corpo-tabela"></tbody>
@@ -133,7 +143,6 @@
             <div id="acertos-box">0</div>
             <div id="erros-box">0</div>
         </div>
-        <div id="resultados-lista"></div>
         <button id="btn-reiniciar" onclick="window.location.reload()">Jogar Novamente</button>
 
     </div>
