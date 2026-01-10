@@ -15,7 +15,7 @@ const menuIntervalos = document.getElementById("menu-intervalos");
 const listaTemasBotoes = document.getElementById("lista-temas-botoes");
 
 // Teste de atualização solicitado:
-menuTemas.insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem;">Version 0.59</p>');
+menuTemas.insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem;">Version 0.60</p>');
 
 // ==========================================
 // CONFIGURAÇÃO DE DICIONÁRIOS
