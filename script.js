@@ -14,15 +14,16 @@ const menuNiveis = document.getElementById("menu-niveis");
 const menuIntervalos = document.getElementById("menu-intervalos");
 const listaTemasBotoes = document.getElementById("lista-temas-botoes");
 
-menuUsuarios.insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem; margin-top:20px;">Version 0.76</p>');
+// Versão 0.78 - Com histórico detalhado de respostas
+menuUsuarios.insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem; margin-top:20px;">Version 0.79</p>');
 
-// NOVA ESTRUTURA: Define o arquivo .txt e o nome que aparece no botão
 const meusDicionarios = [
     { arquivo: "verbosi", exibicao: "Verbos I" }
 ]; 
 
 let vocabulario = []; 
 let palavrasParaOJogo = [];
+let historicoPartida = []; // Armazena os acertos e erros da rodada atual
 let acertos = 0;
 let erros = 0;
 
@@ -54,7 +55,6 @@ function voltarParaDicionarios() {
     menuTemas.style.display = "flex";
 }
 
-// ATUALIZADO: Agora usa os nomes de exibição definidos no array
 function gerarMenuTemas() {
     listaTemasBotoes.innerHTML = "";
     meusDicionarios.forEach(item => {
@@ -91,8 +91,16 @@ function carregarVocabulario(arquivo) {
 
 function abrirMenuNiveis() { menuPrincipal.style.display = "none"; menuNiveis.style.display = "flex"; }
 function abrirMenuIntervalos() { menuPrincipal.style.display = "none"; menuIntervalos.style.display = "flex"; }
-function iniciarNivel(quantidade) { palavrasParaOJogo = vocabulario.slice(0, quantidade); iniciarJogo(); }
-function iniciarIntervalo(inicio, fim) { palavrasParaOJogo = vocabulario.slice(inicio, fim); iniciarJogo(); }
+
+function iniciarNivel(quantidade) { 
+    palavrasParaOJogo = vocabulario.slice(0, quantidade); 
+    iniciarJogo(); 
+}
+
+function iniciarIntervalo(inicio, fim) { 
+    palavrasParaOJogo = vocabulario.slice(inicio, fim); 
+    iniciarJogo(); 
+}
 
 function iniciarJogo() {
     menuNiveis.style.display = "none";
@@ -100,9 +108,14 @@ function iniciarJogo() {
     palavraBox.style.display = "flex";
     opcoesContainer.style.display = "flex";
     contadorContainer.style.display = "flex";
+    btnReiniciar.style.display = "none";
+    
     palavrasParaOJogo.sort(() => Math.random() - 0.5);
-    acertos = 0; erros = 0;
-    acertosBox.textContent = "0"; errosBox.textContent = "0";
+    historicoPartida = []; // Reseta o histórico visual da rodada
+    
+    acertosBox.textContent = acertos; 
+    errosBox.textContent = erros;
+    
     proximaRodada();
 }
 
@@ -125,13 +138,18 @@ function proximaRodada() {
         btn.onclick = () => {
             const todos = document.querySelectorAll(".opcao-btn");
             todos.forEach(b => b.disabled = true);
+            
             if (opcao === atual.correta) {
                 btn.classList.add("correta");
-                acertos++; acertosBox.textContent = acertos;
+                acertos++; 
+                acertosBox.textContent = acertos;
+                historicoPartida.push(`<span style="color:#4CAF50">✔ ${atual.exibir} = ${atual.correta}</span>`);
             } else {
                 btn.classList.add("errada");
-                erros++; errosBox.textContent = erros;
+                erros++; 
+                errosBox.textContent = erros;
                 todos.forEach(b => { if (b.textContent === atual.correta) b.classList.add("correta"); });
+                historicoPartida.push(`<span style="color:#f44336">✖ ${atual.exibir} (Era: ${atual.correta})</span>`);
             }
             setTimeout(proximaRodada, 1400);
         };
@@ -140,9 +158,28 @@ function proximaRodada() {
 }
 
 function finalizarTeste() {
-    palavraBox.textContent = "Teste finalizado!";
-    opcoesContainer.style.display = "none";
+    palavraBox.textContent = "Resumo do Teste";
+    opcoesContainer.style.display = "flex"; // Usamos para mostrar o histórico
+    opcoesContainer.style.flexDirection = "column";
+    opcoesContainer.style.fontSize = "0.9rem";
+    opcoesContainer.style.textAlign = "left";
+    opcoesContainer.style.maxHeight = "300px";
+    opcoesContainer.style.overflowY = "auto";
+    opcoesContainer.style.background = "#fff";
+    opcoesContainer.style.padding = "10px";
+    opcoesContainer.style.borderRadius = "10px";
+
+    opcoesContainer.innerHTML = historicoPartida.join("<br>");
+    
     btnReiniciar.style.display = "block";
+    btnReiniciar.textContent = "Voltar ao Menu";
+    btnReiniciar.onclick = () => {
+        opcoesContainer.style.flexDirection = "row"; // Reseta layout
+        opcoesContainer.style.display = "none";
+        palavraBox.style.display = "none";
+        btnReiniciar.style.display = "none";
+        menuPrincipal.style.display = "flex";
+    };
 }
 
 // Test line: Git 25 update confirmed.
