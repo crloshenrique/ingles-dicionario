@@ -7,18 +7,19 @@
     <style>
         /* ESTILOS GERAIS */
         body { font-family: Arial, sans-serif; background: #f0f0f0; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 10px; box-sizing: border-box; }
-        #container { width: 100%; max-width: 420px; text-align: center; position: relative; }
+        #container { width: 100%; max-width: 420px; text-align: center; position: relative; transition: max-width 0.3s ease; }
         
         /* Container especial para a Revisão ocupar mais espaço */
         .container-largo { max-width: 98% !important; }
 
         .menu { display: flex; flex-direction: column; gap: 12px; width: 100%; }
 
-        /* SELEÇÃO DE USUÁRIO */
+        /* SELEÇÃO DE USUÁRIO (RESTAURADA) */
         .usuarios-flex { display: flex; justify-content: center; gap: 15px; margin-top: 15px; }
         .usuario-card { cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: transform 0.3s ease; -webkit-tap-highlight-color: transparent; width: 130px; }
         .usuario-card:hover { transform: scale(1.1); }
-        .usuario-card img { width: 110px; height: 110px; margin-bottom: 12px; background: #d9d9d9; border-radius: 30px; padding: 15px; object-fit: contain; }
+        .usuario-card:active { transform: scale(0.95); }
+        .usuario-card img { width: 110px; height: 110px; margin-bottom: 12px; background: #d9d9d9; border-radius: 30px; padding: 15px; object-fit: contain; box-sizing: border-box; }
         .usuario-card span { font-size: 1.3rem; font-weight: bold; color: #444; }
 
         /* BOTÕES */
@@ -32,7 +33,7 @@
         .tabela-erros { width: 100%; border-collapse: collapse; table-layout: fixed; }
         
         .tabela-erros th, .tabela-erros td { 
-            padding: 15px 5px; /* Aumentei o padding para a tabela parecer maior */
+            padding: 15px 5px; 
             border: 1px solid rgba(0,0,0,0.1); 
             text-align: center; 
             font-family: Arial, sans-serif;
@@ -42,17 +43,16 @@
 
         .tabela-erros th { background: #5e5e5e; color: white; text-transform: uppercase; font-size: 0.8rem; }
         
-        /* Configuração das 3 colunas restantes */
         .col-palavra { width: 30%; font-weight: bold; color: #333; }
         .col-pronuncia { width: 25%; color: #10a2dd; font-style: italic; }
         .col-significado { width: 45%; }
 
-        /* ÁREA DE JOGO E OUTROS (MANTIDOS) */
+        /* ÁREA DE JOGO */
         #palavra-box { background: #5e5e5e; color: white; font-size: 1.8rem; font-weight: bold; height: 125px; border-radius: 15px; display: none; align-items: center; justify-content: center; margin-bottom: 20px; }
         #opcoes-container { display: none; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
         .opcao-btn { width: calc(50% - 5px); background: #d9d9d9; color: #5e5e5e; }
-        .correta { background: #4CAF50 !important; }
-        .errada { background: #f44336 !important; }
+        .correta { background: #4CAF50 !important; color: white; }
+        .errada { background: #f44336 !important; color: white; }
         #contador-container { display: none; gap: 10px; margin-bottom: 20px; }
         #acertos-box { background: #4CAF50; flex:1; padding:12px; border-radius:12px; color:white; font-weight:bold; }
         #erros-box { background: #f44336; flex:1; padding:12px; border-radius:12px; color:white; font-weight:bold; }
@@ -60,9 +60,7 @@
     </style>
 </head>
 <body>
-
     <div id="container">
-
         <div id="menu-usuarios" class="menu">
             <h2>Escolha o usuário</h2>
             <div class="usuarios-flex">
@@ -140,7 +138,6 @@
         </div>
         <button id="btn-reiniciar" onclick="window.location.reload()">Jogar Novamente</button>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
