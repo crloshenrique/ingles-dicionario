@@ -14,9 +14,14 @@ const menuNiveis = document.getElementById("menu-niveis");
 const menuIntervalos = document.getElementById("menu-intervalos");
 const listaTemasBotoes = document.getElementById("lista-temas-botoes");
 
-menuUsuarios.insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem; margin-top:20px;">Version 0.72</p>');
+menuUsuarios.insertAdjacentHTML('beforeend', '<p style="color:#999; font-size:0.9rem; margin-top:20px;">Version 0.74</p>');
 
-const meusDicionarios = ["verbos"]; 
+// NOVA ESTRUTURA: Define o arquivo .txt e o nome que aparece no botão
+const meusDicionarios = [
+    { arquivo: "verbosi", exibicao: "Verbos I" },
+    { arquivo: "verbosii", exibicao: "Verbos II" }
+]; 
+
 let vocabulario = []; 
 let palavrasParaOJogo = [];
 let acertos = 0;
@@ -50,13 +55,14 @@ function voltarParaDicionarios() {
     menuTemas.style.display = "flex";
 }
 
+// ATUALIZADO: Agora usa os nomes de exibição definidos no array
 function gerarMenuTemas() {
     listaTemasBotoes.innerHTML = "";
-    meusDicionarios.forEach(tema => {
+    meusDicionarios.forEach(item => {
         const btn = document.createElement("button");
-        btn.textContent = tema.charAt(0).toUpperCase() + tema.slice(1);
+        btn.textContent = item.exibicao; 
         btn.className = "btn-azul"; 
-        btn.onclick = () => carregarVocabulario(tema);
+        btn.onclick = () => carregarVocabulario(item.arquivo);
         listaTemasBotoes.appendChild(btn);
     });
 }
@@ -75,6 +81,11 @@ function carregarVocabulario(arquivo) {
             });
             menuTemas.style.display = "none";
             menuPrincipal.style.display = "flex";
+            statusLoad.style.display = "none";
+        })
+        .catch(err => {
+            console.error("Erro ao carregar dicionário:", err);
+            alert("Erro ao carregar o arquivo: " + arquivo);
             statusLoad.style.display = "none";
         });
 }
