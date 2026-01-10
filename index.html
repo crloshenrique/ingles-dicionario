@@ -10,29 +10,15 @@
         #container { width: 100%; max-width: 400px; text-align: center; position: relative; }
         .menu { display: flex; flex-direction: column; gap: 12px; width: 100%; }
 
-        /* NOVO: ESTILO SELEÇÃO DE USUÁRIO */
-        .usuarios-flex {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            margin-top: 20px;
-        }
-        .usuario-card {
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: transform 0.2s;
-            -webkit-tap-highlight-color: transparent;
-        }
+        /* SELEÇÃO DE USUÁRIO */
+        .usuarios-flex { display: flex; justify-content: center; gap: 40px; margin-top: 20px; }
+        .usuario-card { cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: transform 0.2s; -webkit-tap-highlight-color: transparent; }
         .usuario-card:active { transform: scale(0.95); }
         .usuario-card img {
             width: 80px;
             height: 80px;
             margin-bottom: 10px;
-            background: #d9d9d9;
-            border-radius: 20px;
-            padding: 10px;
+            /* Removido fundo e borda para o ícone ficar solto */
             object-fit: contain;
         }
         .usuario-card span { font-size: 1.1rem; font-weight: bold; color: #444; }
@@ -40,6 +26,7 @@
         /* BOTÕES */
         button { padding: 14px; font-size: 18px; border-radius: 10px; border: none; cursor: pointer; background: #5e5e5e; color: white; transition: opacity 0.2s; -webkit-tap-highlight-color: transparent; }
         button:active { opacity: 0.8; }
+        .btn-azul { background: #10a2dd !important; }
 
         /* BOX DA PALAVRA E OPÇÕES */
         #palavra-box { background: #5e5e5e; color: white; font-size: 1.8rem; font-weight: bold; height: 125px; border-radius: 15px; display: none; align-items: center; justify-content: center; margin-bottom: 20px; padding: 10px; }
@@ -78,17 +65,25 @@
             </div>
         </div>
 
+        <div id="menu-hub" class="menu" style="display:none">
+            <h2>Menu</h2>
+            <button class="btn-azul" onclick="irParaTemas()">Praticar</button>
+            <button class="btn-azul" onclick="console.log('Revisão em breve')">Revisão de erros</button>
+            <button onclick="window.location.reload()">Sair</button>
+        </div>
+
         <div id="menu-temas" class="menu" style="display:none">
             <h2>Escolha um dicionário</h2>
             <div id="lista-temas-botoes" class="menu"></div>
+            <button onclick="voltarParaHub()" style="margin-top:10px;">Voltar</button>
         </div>
 
         <div id="menu-principal" class="menu" style="display:none">
             <h2>Como deseja praticar?</h2>
             <p id="status-load" style="display:none">Carregando...</p>
-            <button id="btn-intervalos" onclick="abrirMenuIntervalos()" style="background:#10a2dd;">Escolher palavras</button>
-            <button id="btn-niveis" onclick="abrirMenuNiveis()" style="background:#10a2dd;">Jogar por níveis</button>
-            <button onclick="window.location.reload()" style="background:#5e5e5e;">Voltar</button>
+            <button id="btn-intervalos" onclick="abrirMenuIntervalos()" class="btn-azul">Escolher palavras</button>
+            <button id="btn-niveis" onclick="abrirMenuNiveis()" class="btn-azul">Jogar por níveis</button>
+            <button onclick="voltarAoPrincipal()" style="background:#5e5e5e;">Voltar</button>
         </div>
 
         <div id="menu-niveis" class="menu" style="display:none">
