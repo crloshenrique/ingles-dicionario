@@ -10,8 +10,8 @@
         #container { width: 100%; max-width: 400px; text-align: center; position: relative; }
         .menu { display: flex; flex-direction: column; gap: 12px; width: 100%; }
 
-        /* SELEÇÃO DE USUÁRIO - COM ANIMAÇÃO */
-        .usuarios-flex { display: flex; justify-content: center; gap: 30px; margin-top: 30px; }
+        /* SELEÇÃO DE USUÁRIO - APROXIMADOS */
+        .usuarios-flex { display: flex; justify-content: center; gap: 15px; margin-top: 30px; }
         .usuario-card { 
             cursor: pointer; 
             display: flex; 
@@ -19,7 +19,7 @@
             align-items: center; 
             transition: transform 0.3s ease; 
             -webkit-tap-highlight-color: transparent; 
-            width: 140px; 
+            width: 130px; 
         }
         .usuario-card:hover { transform: scale(1.1); }
         .usuario-card:active { transform: scale(0.95); }
@@ -36,7 +36,7 @@
         }
         .usuario-card span { font-size: 1.3rem; font-weight: bold; color: #444; }
 
-        /* BOTÕES GERAIS - ANIMAÇÃO APLICADA AQUI */
+        /* BOTÕES GERAIS */
         button { 
             padding: 14px; 
             font-size: 18px; 
@@ -45,19 +45,11 @@
             cursor: pointer; 
             background: #5e5e5e; 
             color: white; 
-            transition: transform 0.2s ease, opacity 0.2s; /* Adicionado transform aqui */
+            transition: transform 0.2s ease, opacity 0.2s; 
             -webkit-tap-highlight-color: transparent; 
         }
-        
-        /* Efeito de crescer em todos os botões do site ao passar o mouse */
-        button:hover { 
-            transform: scale(1.05); 
-        }
-
-        button:active { 
-            transform: scale(0.95); 
-            opacity: 0.8; 
-        }
+        button:hover { transform: scale(1.05); }
+        button:active { transform: scale(0.95); opacity: 0.8; }
 
         .btn-azul { background: #10a2dd !important; }
 
@@ -108,7 +100,7 @@
         <div id="menu-temas" class="menu" style="display:none">
             <h2>Escolha um dicionário</h2>
             <div id="lista-temas-botoes" class="menu"></div>
-            <button onclick="voltarParaHub()" style="margin-top:10px;">Voltar</button>
+            <button onclick="voltarParaHub()">Voltar</button>
         </div>
 
         <div id="menu-principal" class="menu" style="display:none">
